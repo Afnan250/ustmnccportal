@@ -512,7 +512,7 @@ async function uploadToCloudinary(file){
 
 if(localStorage.getItem("activeAnoId") !== "ANO001"){
   alert("Please login as ANO first.");
-  window.location.href = "ncc.html";
+  window.location.href = "index.html";
 }
 
 window.scrollToSection = function(id){
@@ -995,7 +995,7 @@ window.uploadShowcase = async function(){
 
 window.logoutAno = function(){
   localStorage.removeItem("activeAnoId");
-  window.location.href = "ncc.html";
+  window.location.href = "index.html";
 };
 
 loadCadets();
