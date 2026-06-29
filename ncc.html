@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USTM NCC | 42 MEGH BN NCC</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif}
+html{scroll-behavior:smooth}
+body{background:#f4f6f9;color:#222}
+a{text-decoration:none}
+
+.top-bar{
+  background:#071a3d;color:white;padding:8px 7%;
+  display:flex;justify-content:space-between;font-size:14px
+}
+
+.recruitment-marquee{
+  display:none;
+  width:100%;
+  overflow:hidden;
+  background:linear-gradient(90deg,#ff9933,#fff,#138808);
+  color:#071a3d;
+  font-weight:800;
+  padding:10px 0;
+}
+
+.marquee-track{
+  display:flex;
+  width:max-content;
+  white-space:nowrap;
+  animation:moveMarquee 22s linear infinite;
+}
+
+.marquee-track span{
+  padding:0 45px;
+  font-size:15px;
+}
+
+@keyframes moveMarquee{
+  from{transform:translateX(100vw)}
+  to{transform:translateX(-100%)}
+}
+
+header{
+  background:white;padding:14px 7%;display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 4px 15px rgba(0,0,0,.08);position:sticky;top:0;z-index:1000
+}
+
+.logo-box{display:flex;align-items:center;gap:12px}
+.logo-frame{
+  width:70px;height:70px;border-radius:50%;padding:5px;
+  background:linear-gradient(135deg,#ff9933,#fff,#138808);
+  box-shadow:0 0 18px rgba(255,153,51,.45)
+}
+.logo-frame img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:white}
+.logo-text h2{color:#071a3d}
+.logo-text p{color:#d35400;font-weight:700}
+
+nav a{margin-left:22px;color:#071a3d;font-weight:700}
+nav a:hover{color:#d35400}
+.menu-btn{display:none;font-size:28px;color:#071a3d}
+#check{display:none}
+
+.hero{
+  min-height:85vh;
+  background:linear-gradient(rgba(7,26,61,.82),rgba(7,26,61,.9)),url("ncc1.jpeg");
+  background-size:cover;background-position:center;
+  display:flex;align-items:center;padding:70px 7%;color:white
+}
+.hero-content{max-width:760px}
+.hero h1{font-size:55px;line-height:1.1;margin-bottom:18px}
+.hero span{color:#ff9933}
+.hero p{font-size:18px;color:#eee;margin-bottom:28px;line-height:1.8}
+
+.btn{
+  display:inline-block;padding:13px 28px;background:#ff9933;color:#071a3d;
+  border-radius:7px;font-weight:800;margin:8px 8px 8px 0;border:none;cursor:pointer
+}
+.btn-outline{background:transparent;color:white;border:2px solid #ff9933}
+
+section{padding:70px 7%}
+.title{text-align:center;color:#071a3d;font-size:36px;margin-bottom:12px}
+.subtitle{text-align:center;color:#666;margin-bottom:40px}
+
+.grid,.gallery,.social-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px
+}
+
+.card,.notice,.social-card{
+  background:white;padding:28px;border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  border-top:5px solid #ff9933;transition:.3s
+}
+.card:hover,.social-card:hover{transform:translateY(-8px)}
+.card i,.social-card i{font-size:38px;color:#071a3d;margin-bottom:15px}
+.card h3,.social-card h3{color:#071a3d;margin-bottom:10px}
+.card p,.social-card p{color:#555;line-height:1.7}
+.audio-card,.join-card{cursor:pointer}
+
+.notice-board{background:#fff7ef}
+.notice{border-left:5px solid #ff9933;border-top:none}
+
+.gallery img{
+  width:100%;height:230px;object-fit:cover;border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15)
+}
+
+.social-card{display:flex;align-items:center;gap:18px}
+.instagram{border-left:5px solid #E1306C}.instagram i{color:#E1306C}
+.facebook{border-left:5px solid #1877F2}.facebook i{color:#1877F2}
+.whatsapp{border-left:5px solid #25D366}.whatsapp i{color:#25D366}
+.email{border-left:5px solid #ff9933}.email i{color:#ff9933}
+
+.login-section{
+  background:linear-gradient(rgba(7,26,61,.88),rgba(7,26,61,.94)),url("ncc2.jpeg");
+  background-size:cover;background-position:center;
+  position:relative;overflow:hidden;perspective:1200px
+}
+.login-section .title{color:white}
+
+.tricolor-bg{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:1200px;height:500px;z-index:0;pointer-events:none
+}
+.tricolor-bg:before{
+  content:"";position:absolute;width:100%;height:120px;top:40px;
+  background:linear-gradient(90deg,transparent,#FF9933,transparent);
+  filter:blur(50px);animation:saffronWave 6s ease-in-out infinite
+}
+.tricolor-bg:after{
+  content:"";position:absolute;width:100%;height:120px;bottom:40px;
+  background:linear-gradient(90deg,transparent,#138808,transparent);
+  filter:blur(50px);animation:greenWave 6s ease-in-out infinite reverse
+}
+
+.flip-wrapper{
+  max-width:880px;min-height:470px;margin:auto;position:relative;
+  transform-style:preserve-3d;transition:transform .8s ease;z-index:5
+}
+.flip-wrapper.flip{transform:rotateY(180deg)}
+.flip-side{position:absolute;width:100%;min-height:470px;backface-visibility:hidden}
+.flip-back{transform:rotateY(180deg)}
+
+.login-glass{
+  width:100%;min-height:470px;padding:36px;border-radius:28px;
+  background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);
+  backdrop-filter:blur(18px);box-shadow:0 25px 55px rgba(0,0,0,.35)
+}
+.login-glass h3{color:white;text-align:center;margin-bottom:24px;font-size:28px}
+.login-glass input,.login-glass select{
+  width:100%;padding:15px;margin:11px 0;border:1px solid rgba(255,255,255,.28);
+  border-radius:14px;outline:none;background:rgba(255,255,255,.12);color:white;font-size:15px
+}
+.login-glass input::placeholder{color:rgba(255,255,255,.75)}
+.login-glass select option{color:black}
+.note{color:rgba(255,255,255,.85);font-size:14px;margin:12px 0 20px;text-align:center}
+.login-main-btn{width:100%;border-radius:50px;margin-top:12px}
+.switch-text{text-align:center;margin-top:22px;color:white}
+.switch-link{background:none;border:none;color:#ff9933;font-weight:800;font-size:17px;cursor:pointer}
+
+@keyframes saffronWave{0%{transform:translateX(-100px)}50%{transform:translateX(100px)}100%{transform:translateX(-100px)}}
+@keyframes greenWave{0%{transform:translateX(100px)}50%{transform:translateX(-100px)}100%{transform:translateX(100px)}}
+
+.audio-popup,.join-popup{
+  position:fixed;inset:0;background:rgba(0,0,0,.72);
+  display:none;justify-content:center;align-items:center;
+  z-index:9999;padding:20px
+}
+
+.popup-box,.join-box{
+  width:95%;max-width:800px;max-height:90vh;overflow-y:auto;
+  background:white;padding:28px;border-radius:22px;position:relative;
+  animation:popupZoom .4s ease;border:3px solid transparent;
+  box-shadow:0 0 18px #ff9933,0 0 30px #ffffff,0 0 42px #138808
+}
+
+.popup-box:before,.join-box:before{
+  content:"";position:absolute;inset:-4px;border-radius:24px;
+  background:linear-gradient(90deg,#ff9933,#ffffff,#138808,#ffffff,#ff9933);
+  background-size:300%;z-index:-1;filter:blur(12px);
+  animation:tricolorGlow 4s linear infinite
+}
+
+@keyframes tricolorGlow{0%{background-position:0%}100%{background-position:300%}}
+@keyframes popupZoom{from{transform:scale(.75);opacity:0}to{transform:scale(1);opacity:1}}
+
+.popup-box h2,.join-box h2{text-align:center;color:#071a3d;margin-bottom:20px;font-size:30px}
+
+.close-btn{
+  position:absolute;right:18px;top:12px;font-size:30px;
+  background:none;border:none;cursor:pointer;color:#071a3d
+}
+
+.tabs,.info-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.tab-btn,.info-tab-btn{
+  flex:1;min-width:150px;padding:12px;border:1px solid #ddd;
+  background:white;color:#071a3d;font-weight:800;cursor:pointer;border-radius:10px
+}
+.tab-btn.active,.info-tab-btn.active-info{
+  background:linear-gradient(90deg,#ff9933,#ffffff,#138808);
+  color:#071a3d;box-shadow:0 0 15px rgba(255,153,51,.8)
+}
+
+.audio-content{
+  border:1px solid #ddd;padding:18px;border-radius:14px;background:#fff
+}
+.audio-content h3{color:#071a3d;margin-bottom:8px;font-size:24px}
+.audio-content audio{width:100%;margin:15px 0}
+
+.download-btn{
+  display:inline-block;margin:6px 0;padding:10px 18px;border-radius:8px;
+  background:#071a3d;color:white;text-decoration:none;font-weight:700
+}
+
+.info-box{
+  margin-top:12px;padding:15px;background:#f8fafc;
+  border-left:5px solid #ff9933;border-radius:10px;
+  line-height:1.7;color:#333
+}
+.info-box h4{color:#071a3d;margin-bottom:8px}
+.lyrics-text{white-space:pre-line}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+.join-box input,.join-box select,.join-box textarea{
+  width:100%;padding:13px;border:1px solid #ddd;
+  border-radius:10px;outline:none;font-size:15px
+}
+.join-box textarea{
+  resize:none;min-height:90px;grid-column:1/-1
+}
+.closed-message{text-align:center;padding:25px;line-height:1.8;color:#333}
+.closed-message i{font-size:45px;color:#ff9933;margin-bottom:12px}
+
+footer{background:#071a3d;color:white;text-align:center;padding:25px}
+
+@media(max-width:900px){
+  .top-bar{flex-direction:column;gap:5px;text-align:center}
+  .menu-btn{display:block}
+  nav{
+    position:fixed;top:98px;right:-100%;width:75%;height:100vh;background:white;
+    display:flex;flex-direction:column;padding:35px;transition:.4s
+  }
+  nav a{margin:14px 0}
+  #check:checked ~ nav{right:0}
+  .hero{text-align:center}
+  .hero h1{font-size:38px}
+}
+
+@media(max-width:600px){
+  .marquee-track{animation-duration:16s}
+  .marquee-track span{font-size:13px;padding:0 25px}
+  .login-section{padding:60px 5%}
+  .flip-wrapper,.flip-side,.login-glass{min-height:540px}
+  .login-glass{padding:26px 18px;border-radius:22px}
+  .logo-frame{width:60px;height:60px}
+  .popup-box,.join-box{padding:20px}
+  .popup-box h2,.join-box h2{font-size:23px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+  <p><i class="fa-solid fa-location-dot"></i> University of Science & Technology Meghalaya</p>
+  <p><i class="fa-solid fa-shield-halved"></i> 42 MEGH BN NCC</p>
+</div>
+
+<div class="recruitment-marquee" id="recruitmentMarquee">
+  <div class="marquee-track">
+    <span>USTM NCC recruitment will begin from 1st July. Interested students are advised to keep their documents ready. Jai Hind.</span>
+    <span>USTM NCC recruitment will begin from 1st July. Interested students are advised to keep their documents ready. Jai Hind.</span>
+  </div>
+</div>
+
+<header>
+  <div class="logo-box">
+    <div class="logo-frame">
+      <img src="ncc2.jpeg" alt="USTM NCC Logo">
+    </div>
+    <div class="logo-text">
+      <h2>USTM NCC</h2>
+      <p>Unity and Discipline</p>
+    </div>
+  </div>
+
+  <input type="checkbox" id="check">
+  <label for="check" class="menu-btn"><i class="fa-solid fa-bars"></i></label>
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#notice">Notice</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#social">Social</a>
+    <a href="#login">Login</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <h1>Welcome to <span>USTM NCC</span></h1>
+    <p>Jai Hind. USTM NCC develops discipline, leadership, confidence, patriotism and service among cadets under 42 MEGH BN NCC.</p>
+    <a href="#about" class="btn">Explore NCC</a>
+    <a href="#login" class="btn btn-outline">Cadet / ANO Login</a>
+  </div>
+</section>
+
+<section id="about">
+  <h2 class="title">About USTM NCC</h2>
+  <p class="subtitle">Discipline, leadership, service and national spirit.</p>
+
+  <div class="grid">
+    <div class="card">
+      <i class="fa-solid fa-flag"></i>
+      <h3>About NCC</h3>
+      <p>NCC develops discipline, leadership, teamwork and service-mindedness among students.</p>
+    </div>
+
+  <div class="card" onclick="window.location.href='alumni.html'" style="cursor:pointer;">
+  <i class="fa-solid fa-user-graduate"></i>
+  <h3>Alumni Cadets</h3>
+  <p>
+    Explore the alumni wall of passed out cadets, their batches, ranks,
+    memories and messages for future NCC cadets.
+  </p>
+</div>
+
+    <div class="card join-card" id="joinCard" onclick="openJoinPopup()">
+      <i class="fa-solid fa-user-plus"></i>
+      <h3>Join USTM NCC</h3>
+      <p>Interested students can submit their details during the official recruitment period.</p>
+    </div>
+
+    <div class="card audio-card" onclick="openAudioPopup()">
+      <i class="fa-solid fa-headphones"></i>
+      <h3>NCC Heritage & Music Library</h3>
+      <p>Listen, download and learn the history of NCC and patriotic songs.</p>
+    </div>
+  </div>
+</section>
+
+<section class="notice-board" id="notice">
+  <h2 class="title">Notice Board</h2>
+  <p class="subtitle">Latest updates from ANO or Senior In-Charge.</p>
+
+  <div class="notice">
+    <h3 id="noticeTitle">No Notice Available</h3>
+    <p id="noticeContent">Waiting for official updates.</p>
+    <small id="noticeBy"></small>
+
+    <div id="noticeMediaBox" style="margin-top:18px;"></div>
+  </div>
+</section>
+
+<section id="gallery">
+  <h2 class="title">USTM NCC Gallery</h2>
+  <p class="subtitle">Cadet achievements, camps, events and NCC activities.</p>
+
+  <div class="gallery" id="mainGallery">
+    <img src="ncc1.jpeg" alt="NCC Activity">
+    <img src="ncc3.jpeg" alt="NCC Gallery">
+    <img src="ustmncclogo.jpeg" alt="USTM NCC Logo">
+  </div>
+
+  <div style="text-align:center;margin-top:30px;">
+    <a href="achievements-gallery.html" class="btn">
+      View More Achievements
+    </a>
+  </div>
+</section>
+
+<section id="social">
+  <h2 class="title">Connect With USTM NCC</h2>
+  <div class="social-grid">
+    <a href="https://www.instagram.com/ustmncc_warriors?igsh=MXNpYnFkcTVkdXd4YQ==" target="_blank" class="social-card instagram">
+      <i class="fab fa-instagram"></i>
+      <div><h3>Instagram</h3><p>ustmncc_warriors</p></div>
+    </a>
+
+    <a href="https://www.facebook.com/share/1BdKmMqtJk/" target="_blank" class="social-card facebook">
+      <i class="fab fa-facebook-f"></i>
+      <div><h3>Facebook</h3><p>USTM NCC Unit</p></div>
+    </a>
+
+    <a href="https://whatsapp.com/channel/0029VbAghfx9mrGWu04tYc3M" target="_blank" class="social-card whatsapp">
+      <i class="fab fa-whatsapp"></i>
+      <div><h3>WhatsApp Channel</h3><p>USTM NCC Updates</p></div>
+    </a>
+
+    <a href="mailto:ustmnccwarriors@gmail.com" class="social-card email">
+      <i class="fas fa-envelope"></i>
+      <div><h3>Email</h3><p>ustmnccwarriors@gmail.com</p></div>
+    </a>
+  </div>
+</section>
+
+<section class="login-section" id="login">
+  <div class="tricolor-bg"></div>
+  <h2 class="title">Cadet / ANO Access</h2>
+
+  <div class="flip-wrapper" id="flipCard">
+    <div class="flip-side flip-front">
+      <div class="login-glass">
+        <h3>Login</h3>
+        <select id="loginType">
+          <option value="cadet">Cadet Login</option>
+          <option value="ano">ANO Admin Login</option>
+        </select>
+        <input type="text" id="loginId" placeholder="Enter ID">
+        <input type="password" id="loginPass" placeholder="Enter Password">
+      <button type="button" class="btn login-main-btn" onclick="login()">Login</button>
+        <p class="switch-text">
+          Cadet not registered?
+          <button type="button" class="switch-link" onclick="flipToRegister()">Register here</button>
+        </p>
+      </div>
+    </div>
+
+    <div class="flip-side flip-back">
+      <div class="login-glass">
+        <h3>Cadet Registration</h3>
+        <input type="text" id="registerId" placeholder="ML/2026/SDIA/12345/Cadet/Afnan Al Jedid">
+        <input type="password" id="registerPass" placeholder="Create Password">
+        <p class="note">Format: ML/YEAR/SDIA or SWIA/UNIQUE NUMBER/RANK/NAME</p>
+        <button class="btn login-main-btn" onclick="registerCadet()">Register Cadet</button>
+        <p class="switch-text">
+          Already registered?
+          <button type="button" class="switch-link" onclick="flipToLogin()">Login here</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 USTM NCC | 42 MEGH BN NCC
+</footer>
+
+<div class="join-popup" id="joinPopup">
+  <div class="join-box">
+    <button class="close-btn" onclick="closeJoinPopup()">×</button>
+    <h2>USTM NCC Enrollment Form</h2>
+
+    <div id="joinOpenBox">
+      <form id="joinForm">
+        <div class="form-grid">
+          <input type="text" id="appName" placeholder="Full Name" required>
+          <input type="text" id="appDepartment" placeholder="Department" required>
+          <input type="text" id="appRoll" placeholder="Roll Number" required>
+          <input type="text" id="appSemester" placeholder="Semester" required>
+
+          <select id="appGender" required>
+            <option value="">Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+
+          <input type="text" id="appMobile" placeholder="Mobile Number" required>
+          <input type="email" id="appEmail" placeholder="Email Address">
+          <input type="text" id="appHeight" placeholder="Height e.g. 170 cm" required>
+
+          <select id="appBlood" required>
+            <option value="">Blood Group</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option>
+            <option>O+</option><option>O-</option>
+          </select>
+
+          <select id="appHostel" required>
+            <option value="">Hostel / Day Scholar</option>
+            <option>Hosteller</option>
+            <option>Day Scholar</option>
+          </select>
+
+          <input type="text" id="appEmergency" placeholder="Emergency Contact Number" required>
+
+          <select id="appAcer" required>
+            <option value="">Do you have NCC 'A' Certificate?</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+
+          <select id="appSports" required>
+            <option value="">Sports Certificate</option>
+            <option>International</option>
+            <option>National</option>
+            <option>State</option>
+            <option>District</option>
+            <option>College</option>
+            <option>None</option>
+          </select>
+
+          <select id="appCultural" required>
+            <option value="">Cultural Certificate</option>
+            <option>National</option>
+            <option>State</option>
+            <option>District</option>
+            <option>College</option>
+            <option>None</option>
+          </select>
+
+          <textarea id="appMedical" placeholder="Medical Issues, if any. Write None if no issue." required></textarea>
+          <textarea id="appSkills" placeholder="Special Skills / Achievements / Leadership Experience"></textarea>
+          <textarea id="appReason" placeholder="Why do you want to join NCC?" required></textarea>
+        </div>
+
+        <button type="submit" class="btn login-main-btn">Submit Application</button>
+      </form>
+    </div>
+
+    <div id="joinClosedBox" class="closed-message" style="display:none;">
+      <i class="fa-solid fa-lock"></i>
+      <h3>NCC Recruitment Closed</h3>
+      <p>
+        Thank you for your interest in USTM NCC. The recruitment period for this session has concluded.
+        Please apply during the next enrollment cycle from July to October. Jai Hind.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="audio-popup" id="audioPopup">
+  <div class="popup-box">
+    <button class="close-btn" onclick="closeAudioPopup()">×</button>
+    <h2>NCC Heritage & Music Library</h2>
+
+    <div class="tabs">
+      <button onclick="showAudio(event,'anthem')" class="tab-btn active">NATIONAL ANTHEM</button>
+      <button onclick="showAudio(event,'nccsong')" class="tab-btn">NCC SONG</button>
+      <button onclick="showAudio(event,'badluram')" class="tab-btn">BADLURAM KA BADAN</button>
+    </div>
+
+    <div class="audio-content" id="anthem">
+      <h3>National Anthem</h3>
+      <p>Jana Gana Mana</p>
+      <audio controls preload="metadata">
+        <source src="nationalanthem.mp3" type="audio/mpeg">
+        Your browser does not support audio.
+      </audio>
+      <a href="nationalanthem.mp3" download class="download-btn">Download Audio</a>
+
+      <div class="info-tabs">
+        <button class="info-tab-btn active-info" onclick="showInfo(event,'anthemLyrics')">Lyrics</button>
+        <button class="info-tab-btn" onclick="showInfo(event,'anthemHistory')">History & Significance</button>
+      </div>
+
+      <div class="info-box" id="anthemLyrics">
+        <h4>Lyrics</h4>
+        <p class="lyrics-text">Jana Gana Mana
+Adhinayaka Jay He
+Bharata Bhagya Vidhata
+Panjab Sindhu Gujarat Maratha
+Dravida Utkala Banga
+Vindhya Himachal Yamuna Ganga
+Uchchala Jaladhi Taranga
+Tava Subha Name Jaage
+Tave Subha Aashish Mange
+Gaahe Tava Jay Gaatha
+Jana Gana Mangal Daayak Jay He
+Bharat Bhagya Vidhata
+Jay He, Jay He, Jay He
+Jay Jay Jay Jay He.</p>
+      </div>
+
+      <div class="info-box" id="anthemHistory" style="display:none;">
+        <h4>History & Significance</h4>
+        <p>Jana Gana Mana was written by Rabindranath Tagore in 1911 and adopted as the National Anthem of India on 24 January 1950. In NCC, it is played during official functions, parades and ceremonies to show respect towards the nation.</p>
+      </div>
+    </div>
+
+    <div class="audio-content" id="nccsong" style="display:none;">
+      <h3>NCC Song</h3>
+      <p>Hum Sab Bharatiya Hain</p>
+      <audio controls preload="metadata">
+        <source src="nccsong.mp3" type="audio/mpeg">
+        Your browser does not support audio.
+      </audio>
+      <a href="nccsong.mp3" download class="download-btn">Download Audio</a>
+
+      <div class="info-tabs">
+        <button class="info-tab-btn active-info" onclick="showInfo(event,'nccLyrics')">Lyrics</button>
+        <button class="info-tab-btn" onclick="showInfo(event,'nccHistory')">History</button>
+      </div>
+
+      <div class="info-box" id="nccLyrics">
+        <h4>Lyrics</h4>
+        <p class="lyrics-text">Hum Sab Bharatiya Hain, Hum Sab Bharatiya Hain
+Apni Manzil Ek Hai,
+Ha, Ha, Ha, Ek Hai,
+Ho, Ho, Ho, Ek Hai.
+Hum Sab Bharatiya Hain.
+
+Kashmir Ki Dharti Rani Hai,
+Sartaj Himalaya Hai,
+Saadiyon Se Humne Isko Apne Khoon Se Pala Hai
+Desh Ki Raksha Ki Khatir Hum Shamshir Utha Lenge,
+Hum Shamshir Utha Lenge.
+
+Bikhre Bikhre Taare Hain Hum Lekin Jhilmil Ek Hai,
+
+Ha, Ha, Ha, Ek Hai
+Hum Sab Bharatiya Hai.
+Mandir Gurudwaare Bhi Hain Yahan
+Aur Masjid Bhi Hai Yahan
+Girija Ka Hai Ghariyaal Kahin
+Mullah ki Kahin Hai Ajaan
+
+Ek Hee Apna Ram Hain, Ek hi Allah Taala Hai,
+Ek Hee Allah Taala Hain, Raang Birange Deepak Hain Hum,
+lekin Jagmag Ek Hai, Ha Ha Ha Ek Hai, Ho Ho Ho Ek Hai.
+Hum Sab Bharatiya Hain, Hum Sab Bharatiya Hain.</p>
+      </div>
+
+      <div class="info-box" id="nccHistory" style="display:none;">
+        <h4>History</h4>
+        <p>The desirability of composing a NCC song was considered in the Circle Commanders (now called DDGs) Conference held in January 1956 and all circles were asked to send their proposals. The official song of the NCC – “Kadam Mila Ke Chal” was adopted in 1962, and registered in 1969 with the approval of the Ministry of Defence. In 1974, it was felt that the NCC song had failed to catch the imagination of the youth, and there was a need for a change. A sustained process began; entries were invited from Directorates for suitable lyrics; 107 entries were received; of which eight were selected by a Board of Officers. However, all the eight were considered sub standard by Dr Nagendra of Delhi University, who was the judge. On the suggestion of Dr Nagendra, the task was entrusted to Shri Chiranjit, the Chief Producer, Drama Division, AIR, Delhi.
+The song written by Shri Chiranjit was approved, in 1976. The Maharashtra Directorate was asked to get the song composed and recorded with the help of Shri Raj Kapoor, and the Films Division, Bombay. However, nothing much came out of this exercise as Shri Raj Kapoor was then busy in making his film “Satyam Shivam Sundaram” and the studios of the Films Division were under renovation. Later, Shri Mahinder Singh Bedi, a well known poet of Delhi, was requested to write another song. This effort also proved infructuous. AEC Centre Pachmarhi was also approached, but somehow the matter could not be finalized.
+Almost during the same period and independent of efforts at Directorate General NCC, the Film Division undertook production of a documentary on NCC ‘A Cadet’ s Diary’. The Director of the documentary was looking for a suitable song for the film. He happened to hear the song – ‘Ham Sab Hindi Hain’ which appears to have been first sung at a Youth Festival at Chandigarh, sometime during 1968-69, and introduced it in the documentary film.
+The song was a hit and successive Director Generals (DGs) found it good and played it repeatedly in Republic Day camps. In 1980, the word ‘Hindi’ was substituted with ‘Bhartiya’.
+Come ASIAD (1982), and the NCC got the opportunity to display its potential in the opening ceremony. The Special Organising Committee approved trial recording of the song for recital during the Asian Games Festival. The song was finally recorded in its present form, sometime during Oct 1982, at the Western Outdoor Studio, Delhi with the help of AIR artists, and musicians under overall supervision of Pandit Vijai Raghavan Rao.
+Post ASIAD era in the NCC saw among other events, a well composed musical hit and an inspiring NCC song being played and sung alongwith recorded music; a 16 mm colour film had also been made with title ‘Hum Sab Bhartiya Hain’ of 7½ minutes duration. This film had been telecast twice on national hook up. Other films, ‘Unity and Discipline’; ‘A Cadet’ s Diary, had also used this song prominently. The writer of this song seems to have been lost in oblivion. “No body knows” – said Shri SK Sharma, Joint Director, Armed Forces Film and Photo Division, who was actively involved with the production of documentaries on the NCC. “This song was not written for the NCC, as such, writes Shri Mathur, ex-publicity officer, DGNCC, in his notings on the file. But nobody has claimed it so far. Another noting speaks of Sri Virender Sharma as the lyrics writer, and Sri Vijai Raghavan Rao as the music composer.
+This NCC song is liked by millions of cadets, both past and present, and is sung on all important occasions of the NCC.</p>
+      </div>
+    </div>
+
+    <div class="audio-content" id="badluram" style="display:none;">
+      <h3>Badluram Ka Badan</h3>
+      <p>Assam Regiment Song</p>
+      <audio controls preload="metadata">
+        <source src="badluramkabadan.mp3" type="audio/mpeg">
+        Your browser does not support audio.
+      </audio>
+      <a href="badluramkabadan.mp3" download class="download-btn">Download Audio</a>
+
+      <div class="info-tabs">
+        <button class="info-tab-btn active-info" onclick="showInfo(event,'badluramLyrics')">Lyrics</button>
+        <button class="info-tab-btn" onclick="showInfo(event,'badluramHistory')">History</button>
+      </div>
+
+      <div class="info-box" id="badluramLyrics">
+        <h4>Lyrics</h4>
+        <p class="lyrics-text">Ek khubsurat ladki thi…
+Usko dekh ke rifleman…
+Chindi khichna bhul gaya…
+Havaldar Major dekh liya…
+Usko pittu lagaya…
+Badluram ek sipahi thaa…
+Japan war me mar gaya…
+Quarter Master smart thaa…
+Usney ration nikala…
+Badluram ka badan zamin ke nichey hain…
+Toh humein uska ration milta hain…
+Sabashh… hallelujah…
+Toh humein uska ration milta hain…</p>
+      </div>
+
+      <div class="info-box" id="badluramHistory" style="display:none;">
+        <h4>History</h4>
+        <p>This song is based on a real-life incident and is created in honor of Rifleman Badluram a soldier of the 1st Battalion, Assam Regiment in British Indian Army who died while fighting against the Japanese Army in World War II. Badluram was killed in the early days of the battle from a gunshot wound.
+Later the Japanese troops had Kohima under their military blockade and cut down British Indian Army supply. Soon the British troops started facing the food shortage, the airdrop supply was also difficult because of the terrain and due to the deployment of Japanese anti-aircraft gun.
+But the Quartermaster of Badluram’s company didn’t remove Badluram’s name from the ration list and the surplus ration that was collected in the name of Badluram over the months proved to be a godsend. Which later helped the troops survive the siege. And in his memory, Major P.T Porktor in 1946 created a song that later became the regimental song of the Assam Regiment and is sung by recruits in passing out parade at Shillong.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  addDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDQZMu4v6XebenpS2cG2NwYN3RYKS6NWUs",
+  authDomain: "ustm-ncc-portal.firebaseapp.com",
+  projectId: "ustm-ncc-portal",
+  storageBucket: "ustm-ncc-portal.appspot.com",
+  messagingSenderId: "164517585348",
+  appId: "1:164517585348:web:119a2abdb1d871226ec491"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function safeKey(id){
+  return id.replaceAll("/", "-").replaceAll(" ", "-").toUpperCase();
+}
+
+function isRecruitmentOpen(){
+  const month = new Date().getMonth() + 1;
+  return month >= 7 && month <= 10;
+}
+
+function setRecruitmentUI(){
+  const month = new Date().getMonth() + 1;
+  const joinCard = document.getElementById("joinCard");
+
+  if(month >= 5 && month <= 6){
+    document.getElementById("recruitmentMarquee").style.display = "block";
+  }
+
+  if(isRecruitmentOpen()){
+    joinCard.innerHTML = `
+      <i class="fa-solid fa-user-plus"></i>
+      <h3>Join USTM NCC</h3>
+      <p>NCC enrollment is open from July to October. Click here to submit your application.</p>
+    `;
+  }else{
+    joinCard.innerHTML = `
+      <i class="fa-solid fa-lock"></i>
+      <h3>NCC Recruitment Closed</h3>
+      <p>Recruitment opens every year from July to October. Please try again in the next enrollment cycle. Jai Hind.</p>
+    `;
+  }
+}
+
+window.flipToRegister = function(){
+  document.getElementById("flipCard").classList.add("flip");
+};
+
+window.flipToLogin = function(){
+  document.getElementById("flipCard").classList.remove("flip");
+};
+
+window.openJoinPopup = function(){
+  document.getElementById("joinPopup").style.display = "flex";
+
+  if(isRecruitmentOpen()){
+    document.getElementById("joinOpenBox").style.display = "block";
+    document.getElementById("joinClosedBox").style.display = "none";
+  }else{
+    document.getElementById("joinOpenBox").style.display = "none";
+    document.getElementById("joinClosedBox").style.display = "block";
+  }
+};
+
+window.closeJoinPopup = function(){
+  document.getElementById("joinPopup").style.display = "none";
+};
+
+document.getElementById("joinForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  if(!isRecruitmentOpen()){
+    alert("NCC recruitment is currently closed.");
+    return;
+  }
+
+  try{
+    await addDoc(collection(db,"nccApplications"), {
+      name:document.getElementById("appName").value.trim(),
+      department:document.getElementById("appDepartment").value.trim(),
+      roll:document.getElementById("appRoll").value.trim(),
+      semester:document.getElementById("appSemester").value.trim(),
+      gender:document.getElementById("appGender").value,
+      mobile:document.getElementById("appMobile").value.trim(),
+      email:document.getElementById("appEmail").value.trim(),
+      height:document.getElementById("appHeight").value.trim(),
+      bloodGroup:document.getElementById("appBlood").value,
+      hostelStatus:document.getElementById("appHostel").value,
+      emergencyContact:document.getElementById("appEmergency").value.trim(),
+      aCertificate:document.getElementById("appAcer").value,
+      sportsCertificate:document.getElementById("appSports").value,
+      culturalCertificate:document.getElementById("appCultural").value,
+      medicalIssues:document.getElementById("appMedical").value.trim(),
+      skills:document.getElementById("appSkills").value.trim(),
+      reason:document.getElementById("appReason").value.trim(),
+      status:"pending",
+      submittedAt:new Date().toLocaleString()
+    });
+
+    alert("Your NCC application has been submitted successfully. Jai Hind.");
+    document.getElementById("joinForm").reset();
+    closeJoinPopup();
+  }catch(error){
+    alert("Application submit failed. Check Firestore rules.");
+    console.error(error);
+  }
+});
+
+window.registerCadet = async function(){
+  const id = document.getElementById("registerId").value.trim();
+  const pass = document.getElementById("registerPass").value.trim();
+
+  const pattern = /^ML[-/]\d{4}[-/](SDIA|SWIA)[-/]\d+[-/][A-Za-z ]+[-/][A-Za-z ]+$/;
+
+  if(id === "" || pass === ""){
+    alert("Please fill all fields.");
+    return;
+  }
+
+  if(!pattern.test(id)){
+    alert("Invalid Cadet ID format. Example: ML-2026-SDIA-12345-Cadet-Afnan Al Jedid");
+    return;
+  }
+
+  if(pass.length < 4){
+    alert("Password must be at least 4 characters.");
+    return;
+  }
+
+  const cleanId = id.replaceAll("/", "-");
+  const parts = cleanId.split("-");
+  const key = safeKey(cleanId);
+
+  try{
+    await setDoc(doc(db,"cadets",key), {
+      id:cleanId,
+      password:pass,
+      year:parts[1],
+      wing:parts[2],
+      rank:parts[4],
+      name:parts.slice(5).join(" "),
+      cadetYear:1,
+      status:"active",
+      createdAt:new Date().toLocaleString()
+    });
+
+    alert("Cadet registration successful. Now login.");
+    document.getElementById("loginType").value = "cadet";
+    document.getElementById("loginId").value = cleanId;
+    document.getElementById("loginPass").value = "";
+    flipToLogin();
+  }catch(error){
+    alert("Registration failed. Check Firestore rules.");
+    console.error(error);
+  }
+};
+
+window.login = async function(){
+  const type = document.getElementById("loginType").value;
+  const id = document.getElementById("loginId").value.trim().replaceAll("/", "-");
+  const pass = document.getElementById("loginPass").value.trim();
+
+  if(id === "" || pass === ""){
+    alert("Please enter ID and Password.");
+    return;
+  }
+
+  if(type === "ano"){
+    if(id.toUpperCase() === "ANO001" && pass === "USTMNCC@Admin2026"){
+      localStorage.setItem("activeAnoId","ANO001");
+      window.location.href = "ano-dashboard.html";
+    }else{
+      alert("Invalid ANO ID or Password.");
+    }
+    return;
+  }
+
+  const key = safeKey(id);
+
+  try{
+    const snap = await getDoc(doc(db,"cadets",key));
+
+    if(!snap.exists()){
+      alert("Cadet not registered. Please register first.");
+      return;
+    }
+
+    const cadet = snap.data();
+
+    if(cadet.status === "cancelled"){
+      alert("Your NCC enrollment has been cancelled.");
+      return;
+    }
+
+    if(cadet.password === pass){
+      localStorage.setItem("activeCadetId",cadet.id);
+      localStorage.setItem("activeCadetKey",key);
+      window.location.href = "cadet-dashboard.html";
+    }else{
+      alert("Wrong password.");
+    }
+  }catch(error){
+    alert("Login failed. Check Firestore rules.");
+    console.error(error);
+  }
+};
+
+onSnapshot(collection(db,"notices"), snapshot=>{
+  if(snapshot.empty) return;
+
+  let latestNotice = null;
+
+  snapshot.forEach(docSnap=>{
+    const notice = docSnap.data();
+
+    if(!notice.expiresAt || new Date(notice.expiresAt) > new Date()){
+      latestNotice = notice;
+    }
+  });
+
+  if(latestNotice){
+    document.getElementById("noticeTitle").innerText =
+      latestNotice.title || "Notice";
+
+    document.getElementById("noticeContent").innerText =
+      latestNotice.content || "";
+
+    document.getElementById("noticeBy").innerText =
+      "Published by: " + (latestNotice.by || "ANO") + " | " + (latestNotice.date || "");
+
+    const mediaBox = document.getElementById("noticeMediaBox");
+    mediaBox.innerHTML = "";
+
+    if(latestNotice.mediaUrl){
+      if(latestNotice.mediaType === "video"){
+        mediaBox.innerHTML = `
+          <video controls style="width:100%;max-height:420px;border-radius:14px;margin-top:15px;">
+            <source src="${latestNotice.mediaUrl}">
+          </video>
+        `;
+      }else{
+        mediaBox.innerHTML = `
+          <img src="${latestNotice.mediaUrl}" 
+               alt="Notice Photo"
+               style="width:100%;max-height:500px;object-fit:contain;border-radius:14px;margin-top:15px;">
+        `;
+      }
+    }
+  }
+});
+
+setRecruitmentUI();
+</script>
+
+
+<script>
+function openAudioPopup(){
+  const popup = document.getElementById("audioPopup");
+  if(popup){
+    popup.style.display = "flex";
+  }
+}
+
+function closeAudioPopup(){
+  const popup = document.getElementById("audioPopup");
+  if(popup){
+    popup.style.display = "none";
+  }
+
+  document.querySelectorAll("audio").forEach(audio=>{
+    audio.pause();
+    audio.currentTime = 0;
+  });
+}
+
+function showAudio(event,id){
+  document.querySelectorAll(".audio-content").forEach(content=>{
+    content.style.display = "none";
+  });
+
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  document.querySelectorAll("audio").forEach(audio=>{
+    audio.pause();
+    audio.currentTime = 0;
+  });
+
+  const selectedAudio = document.getElementById(id);
+  if(selectedAudio){
+    selectedAudio.style.display = "block";
+  }
+
+  if(event && event.currentTarget){
+    event.currentTarget.classList.add("active");
+  }
+}
+
+function showInfo(event,id){
+  const parent = event.currentTarget.closest(".audio-content");
+
+  if(!parent){
+    return;
+  }
+
+  parent.querySelectorAll(".info-box").forEach(box=>{
+    box.style.display = "none";
+  });
+
+  parent.querySelectorAll(".info-tab-btn").forEach(btn=>{
+    btn.classList.remove("active-info");
+  });
+
+  const selectedInfo = document.getElementById(id);
+  if(selectedInfo){
+    selectedInfo.style.display = "block";
+  }
+
+  event.currentTarget.classList.add("active-info");
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+  const audioPopup = document.getElementById("audioPopup");
+  const joinPopup = document.getElementById("joinPopup");
+
+  if(audioPopup){
+    audioPopup.addEventListener("click",function(e){
+      if(e.target === audioPopup){
+        closeAudioPopup();
+      }
+    });
+  }
+
+  if(joinPopup){
+    joinPopup.addEventListener("click",function(e){
+      if(e.target === joinPopup && typeof closeJoinPopup === "function"){
+        closeJoinPopup();
+      }
+    });
+  }
+
+  document.addEventListener("keydown",function(e){
+    if(e.key === "Escape"){
+      closeAudioPopup();
+      if(typeof closeJoinPopup === "function"){
+        closeJoinPopup();
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>
