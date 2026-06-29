@@ -611,7 +611,7 @@ async function uploadToCloudinary(file){
 
 
 if(!cadetId || !cadetKey){
-  window.location.replace("ncc.html");
+  window.location.replace("index.html");
 }
 
 function makeAttendanceKey(value){
@@ -980,7 +980,7 @@ window.uploadAchievement = async function(){
 window.logoutCadet = function(){
   localStorage.removeItem("activeCadetId");
   localStorage.removeItem("activeCadetKey");
-  window.location.replace("ncc.html");
+  window.location.replace("index.html");
 };
 
 loadCadet().then(()=>{
