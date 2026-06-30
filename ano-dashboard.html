@@ -328,7 +328,7 @@ footer strong{
     <div class="card">
       <i class="fa-solid fa-file-lines"></i>
       <h2>Enrollment Applications</h2>
-      <p>View submitted NCC enrollment forms, approve, reject and download PDF.</p>
+      <p>View submitted NCC enrollment forms, approve, reject and send SMS message.</p>
       <button onclick="scrollToSection('applicationSection')">
         View Applications
       </button>
@@ -611,6 +611,33 @@ function yearText(year){
   return "Not Marked";
 }
 
+function formatPhoneForSMS(phone){
+  let cleanPhone = String(phone || "").replace(/\D/g,"");
+
+  if(cleanPhone.length === 10){
+    cleanPhone = "+91" + cleanPhone;
+  }else if(cleanPhone.length === 12 && cleanPhone.startsWith("91")){
+    cleanPhone = "+" + cleanPhone;
+  }else if(!cleanPhone.startsWith("+")){
+    cleanPhone = "+" + cleanPhone;
+  }
+
+  return cleanPhone;
+}
+
+function sendApplicationSMS(phone, message){
+  if(!phone){
+    alert("No phone number found for this applicant.");
+    return;
+  }
+
+  const finalPhone = formatPhoneForSMS(phone);
+
+  const smsLink = `sms:${finalPhone}?body=${encodeURIComponent(message)}`;
+
+  window.location.href = smsLink;
+}
+
 function downloadPDF(filename, rows){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("landscape", "mm", "a4");
@@ -754,8 +781,8 @@ function displayApplications(applications){
       <td>${app.culturalCertificate || ""}</td>
       <td class="status-${status}">${status.toUpperCase()}</td>
       <td>
-        <button class="small-btn success" onclick="approveApplication('${app.docId}')">Approve</button>
-        <button class="small-btn danger" onclick="rejectApplication('${app.docId}')">Reject</button>
+        <button class="small-btn success" onclick="approveApplication('${app.docId}')">Approve & SMS</button>
+        <button class="small-btn danger" onclick="rejectApplication('${app.docId}')">Reject & SMS</button>
       </td>
     `;
 
@@ -777,21 +804,67 @@ window.filterApplications = function(){
 };
 
 window.approveApplication = async function(docId){
+  const app = allApplications.find(item => item.docId === docId);
+
+  if(!app){
+    alert("Application not found.");
+    return;
+  }
+
+  if(!confirm("Approve this applicant and open SMS message?")){
+    return;
+  }
+
   await updateDoc(doc(db,"nccApplications",docId),{
     status:"approved",
     updatedAt:new Date().toISOString()
   });
 
-  alert("Application approved successfully.");
+  const message =
+`Dear ${app.name || "Student"},
+
+Congratulations. You have been selected for the next stage of USTM NCC enrollment under 42 MEGH BN NCC.
+
+Please stay prepared with your required documents and follow the official instructions shared by USTM NCC.
+
+Jai Hind.
+USTM NCC`;
+
+  alert("Application approved successfully. SMS message will open now.");
+  sendApplicationSMS(app.mobile, message);
 };
 
 window.rejectApplication = async function(docId){
+  const app = allApplications.find(item => item.docId === docId);
+
+  if(!app){
+    alert("Application not found.");
+    return;
+  }
+
+  if(!confirm("Reject this applicant and open SMS message?")){
+    return;
+  }
+
   await updateDoc(doc(db,"nccApplications",docId),{
     status:"rejected",
     updatedAt:new Date().toISOString()
   });
 
-  alert("Application rejected.");
+  const message =
+`Dear ${app.name || "Student"},
+
+Thank you for applying for USTM NCC enrollment under 42 MEGH BN NCC.
+
+We appreciate your interest, but we regret to inform you that you have not been selected this time.
+
+We encourage you to keep improving yourself and apply again in the next opportunity.
+
+Jai Hind.
+USTM NCC`;
+
+  alert("Application rejected. SMS message will open now.");
+  sendApplicationSMS(app.mobile, message);
 };
 
 window.downloadApplicationsPDF = function(){
