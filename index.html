@@ -453,6 +453,12 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
       <p>NCC develops discipline, leadership, teamwork and service-mindedness among students.</p>
     </div>
 
+    <div class="card" onclick="openAnoPopup()" style="cursor:pointer;">
+      <i class="fa-solid fa-user-tie"></i>
+      <h3>Meet Our ANOs</h3>
+      <p>Learn about the Associate NCC Officers guiding USTM NCC through leadership, discipline and service.</p>
+    </div>
+
   <div class="card" onclick="openAlumniChoicePopup()" style="cursor:pointer;">
   <i class="fa-solid fa-user-graduate"></i>
   <h3>Alumni Cadets</h3>
@@ -659,6 +665,39 @@ Developed & Maintained by USTM NCC
         Thank you for your interest in USTM NCC. The recruitment period for this session has concluded.
         Please apply during the next enrollment cycle from July to October. Jai Hind.
       </p>
+    </div>
+  </div>
+</div>
+
+<div class="audio-popup" id="anoPopup">
+  <div class="popup-box">
+    <button class="close-btn" onclick="closeAnoPopup()">×</button>
+    <h2>Meet Our ANOs</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;align-items:stretch;">
+
+      <div style="text-align:center;padding:18px;background:#f8fafc;border-radius:16px;border-top:5px solid #ff9933;">
+        <img src="ano-sir.jpeg"
+             alt="Lt. Syed Rizaul Karim Ahmed"
+             style="width:180px;height:220px;object-fit:cover;border-radius:12px;border:4px solid #071a3d;background:#eee;">
+        <h3 style="margin-top:14px;color:#071a3d;">Lt. Syed Rizaul Karim Ahmed</h3>
+        <p style="font-weight:800;color:#d35400;margin:6px 0;">Associate NCC Officer</p>
+        <p style="color:#555;line-height:1.7;">
+          Guiding USTM NCC cadets with discipline, leadership and dedication towards national service.
+        </p>
+      </div>
+
+      <div style="text-align:center;padding:18px;background:#f8fafc;border-radius:16px;border-top:5px solid #138808;">
+        <img src="ano-maam.jpeg"
+             alt="Lt. Dr. Fahmida S. Bora"
+             style="width:180px;height:220px;object-fit:cover;border-radius:12px;border:4px solid #071a3d;background:#eee;">
+        <h3 style="margin-top:14px;color:#071a3d;">Lt. Dr. Fahmida S. Bora</h3>
+        <p style="font-weight:800;color:#d35400;margin:6px 0;">Associate NCC Officer</p>
+        <p style="color:#555;line-height:1.7;">
+          Mentoring cadets and promoting the NCC values of Unity and Discipline within USTM NCC.
+        </p>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1096,6 +1135,20 @@ setRecruitmentUI();
 
 
 <script>
+function openAnoPopup(){
+  const popup = document.getElementById("anoPopup");
+  if(popup){
+    popup.style.display = "flex";
+  }
+}
+
+function closeAnoPopup(){
+  const popup = document.getElementById("anoPopup");
+  if(popup){
+    popup.style.display = "none";
+  }
+}
+
 function openAlumniChoicePopup(){
   const popup = document.getElementById("alumniChoicePopup");
   if(popup){
@@ -1188,6 +1241,7 @@ document.addEventListener("DOMContentLoaded",function(){
   const audioPopup = document.getElementById("audioPopup");
   const joinPopup = document.getElementById("joinPopup");
   const alumniChoicePopup = document.getElementById("alumniChoicePopup");
+  const anoPopup = document.getElementById("anoPopup");
 
   if(audioPopup){
     audioPopup.addEventListener("click",function(e){
@@ -1213,10 +1267,19 @@ document.addEventListener("DOMContentLoaded",function(){
     });
   }
 
+  if(anoPopup){
+    anoPopup.addEventListener("click",function(e){
+      if(e.target === anoPopup){
+        closeAnoPopup();
+      }
+    });
+  }
+
   document.addEventListener("keydown",function(e){
     if(e.key === "Escape"){
       closeAudioPopup();
       closeAlumniChoicePopup();
+      closeAnoPopup();
       if(typeof closeJoinPopup === "function"){
         closeJoinPopup();
       }
