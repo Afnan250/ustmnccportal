@@ -452,6 +452,9 @@ footer strong{
   <p>© 2026 USTM NCC | 42 MEGH BN NCC</p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
@@ -542,6 +545,34 @@ function yearText(year){
   return "Not Marked";
 }
 
+  function downloadPDF(filename, rows){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("landscape", "mm", "a4");
+
+  doc.setFontSize(16);
+  doc.text("USTM NCC Cadet List", 14, 15);
+
+  doc.setFontSize(10);
+  doc.text("42 MEGH BN NCC", 14, 22);
+  doc.text("Generated: " + new Date().toLocaleString(), 14, 28);
+
+  doc.autoTable({
+    startY: 35,
+    head: [rows[0]],
+    body: rows.slice(1),
+    styles: {
+      fontSize: 8,
+      cellPadding: 2
+    },
+    headStyles: {
+      fillColor: [6, 26, 64],
+      textColor: [255, 255, 255]
+    }
+  });
+
+  doc.save(filename);
+}
+  
 function generateCadetIdWithRank(cadet,newRank){
   const rank = normalizeRank(newRank);
   const oldId = cleanKey(cadet.id || "");
@@ -621,9 +652,9 @@ window.downloadCadetsByYear = async function(year){
     return;
   }
 
-  downloadCSV(
-    `USTM_NCC_${yearText(year).replaceAll(" ","_")}_Cadets.csv`,
-    rows
+downloadPDF(
+  `USTM_NCC_${yearText(year).replaceAll(" ","_")}_Cadets.pdf`,
+  rows
   );
 };
 
@@ -661,6 +692,7 @@ function loadCadets(){
         <td>${docId}</td>
         <td>
           <select class="rank-select" id="rank_${docId}">
+           <option value="CDT" ${rank === "CDT" ? "selected" : ""}>LCPL</option>
             <option value="LCPL" ${rank === "LCPL" ? "selected" : ""}>LCPL</option>
             <option value="CPL" ${rank === "CPL" ? "selected" : ""}>CPL</option>
             <option value="SGT" ${rank === "SGT" ? "selected" : ""}>SGT</option>
