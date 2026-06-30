@@ -29,63 +29,76 @@ a{text-decoration:none}
 .hero p{color:#eee;line-height:1.7}
 
 .btn{
-  display:inline-block;margin-top:22px;padding:12px 25px;
+  display:inline-block;margin:10px 6px 0;padding:12px 25px;
   background:#ff9933;color:#071a3d;border-radius:8px;
-  font-weight:800;
+  font-weight:800;border:none;cursor:pointer;
+}
+
+.btn-outline{
+  background:transparent;
+  color:white;
+  border:2px solid #ff9933;
 }
 
 section{padding:60px 7%}
 .title{text-align:center;color:#071a3d;font-size:34px;margin-bottom:10px}
 .subtitle{text-align:center;color:#666;margin-bottom:35px}
 
-.batch-filter{
-  display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:35px;
+.top-actions{text-align:center;margin-bottom:30px}
+
+.search-box{
+  max-width:430px;
+  margin:0 auto 30px;
 }
 
-.batch-filter button{
-  border:none;background:white;color:#071a3d;padding:10px 22px;
-  border-radius:50px;font-weight:800;cursor:pointer;
-  box-shadow:0 6px 16px rgba(0,0,0,.08);
-}
-
-.batch-filter button.active{
-  background:linear-gradient(90deg,#ff9933,#fff,#138808);
+.search-box input{
+  width:100%;
+  padding:14px;
+  border:1px solid #ccc;
+  border-radius:12px;
+  outline:none;
 }
 
 .alumni-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:25px;
 }
 
 .alumni-card{
-  background:white;border-radius:18px;padding:22px;text-align:center;
+  background:white;border-radius:18px;padding:24px;text-align:center;
   box-shadow:0 12px 28px rgba(0,0,0,.1);
   border-top:5px solid #ff9933;
   cursor:pointer;transition:.3s;
+  min-height:390px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
 }
 
 .alumni-card:hover{transform:translateY(-8px)}
 
 .alumni-card img{
-  width:135px;height:135px;border-radius:50%;
-  object-fit:cover;border:4px solid #ff9933;
-  margin-bottom:15px;
+  width:125px;height:155px;border-radius:12px;
+  object-fit:cover;border:4px solid #071a3d;
+  margin-bottom:15px;background:#eee;
 }
 
-.alumni-card h3{color:#071a3d;margin-bottom:5px}
-.alumni-card p{color:#555;font-weight:600}
+.alumni-card h3{color:#071a3d;margin-bottom:8px;font-size:20px}
+.alumni-card p{color:#555;font-weight:600;line-height:1.5;margin:5px 0}
 
 .rank-badge{
   display:inline-block;margin-bottom:10px;
   padding:6px 14px;border-radius:30px;
-  background:#071a3d;color:white;font-weight:800;font-size:13px;
+  background:linear-gradient(90deg,#ff9933,#fff,#138808);
+  color:#071a3d;font-weight:900;font-size:13px;
 }
 
 .empty{
   background:white;text-align:center;padding:35px;border-radius:18px;
   box-shadow:0 10px 25px rgba(0,0,0,.08);
-  color:#555;
+  color:#555;grid-column:1/-1;
 }
 
 .popup{
@@ -95,10 +108,23 @@ section{padding:60px 7%}
 }
 
 .popup-box{
-  width:95%;max-width:620px;background:white;border-radius:22px;
-  padding:28px;position:relative;text-align:center;
+  width:95%;max-width:850px;max-height:90vh;overflow-y:auto;
+  background:white;border-radius:24px;
+  padding:30px;position:relative;
   box-shadow:0 0 18px #ff9933,0 0 30px #fff,0 0 42px #138808;
   animation:zoom .35s ease;
+}
+
+.popup-box:before{
+  content:"";position:absolute;inset:-4px;border-radius:26px;
+  background:linear-gradient(90deg,#ff9933,#fff,#138808,#fff,#ff9933);
+  background-size:300%;z-index:-1;filter:blur(13px);
+  animation:tricolorGlow 4s linear infinite;
+}
+
+@keyframes tricolorGlow{
+  0%{background-position:0%}
+  100%{background-position:300%}
 }
 
 @keyframes zoom{
@@ -108,33 +134,109 @@ section{padding:60px 7%}
 
 .close-btn{
   position:absolute;right:18px;top:12px;
-  background:none;border:none;font-size:30px;
+  background:none;border:none;font-size:32px;
   color:#071a3d;cursor:pointer;
 }
 
-.popup-box img{
-  width:150px;height:150px;border-radius:50%;
-  object-fit:cover;border:5px solid #ff9933;margin-bottom:15px;
+.profile-view{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:28px;
+  align-items:start;
 }
 
-.popup-box h2{color:#071a3d;margin-bottom:6px}
-.popup-box .details{color:#555;line-height:1.7;margin-bottom:18px}
-
-.message-box{
-  background:#f8fafc;border-left:5px solid #ff9933;
-  padding:16px;border-radius:12px;text-align:left;
-  line-height:1.7;color:#333;
+.profile-view img{
+  width:100%;
+  max-height:340px;
+  object-fit:cover;
+  border-radius:18px;
+  border:5px solid #071a3d;
 }
 
-.message-box h4{color:#071a3d;margin-bottom:8px}
+.profile-info h2{
+  color:#071a3d;
+  font-size:30px;
+  margin-bottom:8px;
+}
+
+.profile-info h4{
+  color:#d35400;
+  margin-bottom:16px;
+}
+
+.info-line{
+  background:#f8fafc;
+  border-left:5px solid #ff9933;
+  padding:12px;
+  margin:10px 0;
+  border-radius:10px;
+  line-height:1.6;
+}
+
+.thoughts{
+  margin-top:16px;
+  padding:16px;
+  background:#fff7ef;
+  border-radius:14px;
+  line-height:1.8;
+}
+
+.jai-hind{
+  margin-top:18px;
+  font-weight:900;
+  color:#138808;
+  font-size:20px;
+}
+
+.choice-box{
+  text-align:center;
+  padding:15px 5px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #ccc;
+  border-radius:10px;
+  outline:none;
+  font-size:15px;
+}
+
+textarea{
+  min-height:95px;
+  resize:none;
+  grid-column:1/-1;
+}
+
+.form-note{
+  color:#555;
+  line-height:1.6;
+  margin-bottom:18px;
+  text-align:center;
+}
 
 footer{
   background:#071a3d;color:white;text-align:center;padding:25px;
 }
 
-@media(max-width:600px){
-  .hero h1{font-size:30px}
+@media(max-width:700px){
+  .hero h1{font-size:32px}
   .title{font-size:28px}
+
+  .profile-view{
+    grid-template-columns:1fr;
+  }
+
+  .profile-view img{
+    max-width:260px;
+    margin:auto;
+  }
 }
 </style>
 </head>
@@ -145,42 +247,121 @@ footer{
   <div class="logo">
     <img src="ncc2.jpeg" alt="USTM NCC Logo">
   </div>
+
   <h1>USTM NCC Alumni Cadets</h1>
   <p>
     Honouring the passed out cadets of USTM NCC who continue to inspire future generations
     through discipline, service and leadership.
   </p>
-  <a href="index.html" class="btn"><i class="fa-solid fa-arrow-left"></i> Back to NCC Page</a>
+
+  <a href="index.html" class="btn">
+    <i class="fa-solid fa-arrow-left"></i> Back to NCC Page
+  </a>
+
+  <button class="btn btn-outline" onclick="openAlumniChoicePopup()">
+    I am an Ex-Cadet
+  </button>
 </div>
 
 <section>
   <h2 class="title">Alumni Wall of Honour</h2>
-  <p class="subtitle">Batch-wise record of former USTM NCC cadets.</p>
+  <p class="subtitle">Click on an alumni card to view full profile.</p>
 
-  <div class="batch-filter" id="batchFilters">
-    <button class="active" onclick="filterAlumni('All', this)">All Batches</button>
+  <div class="search-box">
+    <input type="text" id="searchAlumni" placeholder="Search by name, rank, batch or occupation..." oninput="filterAlumni()">
   </div>
 
-  <div class="alumni-grid" id="alumniGrid"></div>
+  <div class="alumni-grid" id="alumniGrid">
+    <div class="empty">
+      <h3>Loading Alumni Records...</h3>
+    </div>
+  </div>
 </section>
 
-<div class="popup" id="alumniPopup">
+<div class="popup" id="profilePopup">
   <div class="popup-box">
-    <button class="close-btn" onclick="closeAlumniPopup()">×</button>
+    <button class="close-btn" onclick="closeProfilePopup()">×</button>
 
-    <img id="popupPhoto" src="" alt="Alumni Photo">
-    <h2 id="popupName"></h2>
+    <div class="profile-view">
+      <img id="profilePhoto" src="" alt="Alumni Photo">
 
-    <div class="details">
-      <p><strong>Rank:</strong> <span id="popupRank"></span></p>
-      <p><strong>Regimental No:</strong> <span id="popupRegt"></span></p>
-      <p><strong>Batch:</strong> <span id="popupBatch"></span></p>
+      <div class="profile-info">
+        <span class="rank-badge" id="profileRank">RANK</span>
+        <h2 id="profileName">Name</h2>
+        <h4 id="profileBatch">NCC Batch</h4>
+
+        <div class="info-line">
+          <strong>Current Occupation:</strong>
+          <p id="profileOccupation"></p>
+        </div>
+
+        <div class="info-line">
+          <strong>Achievements:</strong>
+          <p id="profileAchievements"></p>
+        </div>
+
+        <div class="thoughts">
+          <strong>Thoughts:</strong>
+          <p id="profileThoughts"></p>
+        </div>
+
+        <div class="jai-hind">JAI HIND</div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <div class="message-box">
-      <h4>Message for Future Cadets</h4>
-      <p id="popupMessage"></p>
+<div class="popup" id="choicePopup">
+  <div class="popup-box">
+    <button class="close-btn" onclick="closeAlumniChoicePopup()">×</button>
+
+    <div class="choice-box">
+      <h2 class="title">Are you an Ex-Cadet of USTM NCC?</h2>
+      <p class="form-note">
+        If yes, submit your alumni details. If no, you can continue as a visitor and view the Alumni Wall.
+      </p>
+
+      <button class="btn" onclick="openAlumniForm()">Yes, I am an Ex-Cadet</button>
+      <button class="btn" onclick="closeAlumniChoicePopup()">No, Continue as Visitor</button>
     </div>
+  </div>
+</div>
+
+<div class="popup" id="formPopup">
+  <div class="popup-box">
+    <button class="close-btn" onclick="closeAlumniForm()">×</button>
+
+    <h2 class="title">Alumni Profile Submission</h2>
+
+    <p class="form-note">
+      Your profile will appear on the Alumni Wall only after ANO approval.
+    </p>
+
+    <form id="alumniForm">
+      <div class="form-grid">
+        <input type="text" id="alumniName" placeholder="Full Name" required>
+
+        <select id="alumniRank" required>
+          <option value="">Select Rank</option>
+          <option value="CDT">CDT</option>
+          <option value="LCPL">LCPL</option>
+          <option value="CPL">CPL</option>
+          <option value="SGT">SGT</option>
+          <option value="JUO">JUO</option>
+          <option value="SUO">SUO</option>
+        </select>
+
+        <input type="text" id="alumniBatch" placeholder="NCC Year e.g. 2021-2024" required>
+        <input type="text" id="alumniOccupation" placeholder="Current Occupation" required>
+
+        <input type="url" id="alumniPhoto" placeholder="Passport Size Photo URL" required>
+        <input type="text" id="alumniAchievements" placeholder="Achievements optional">
+
+        <textarea id="alumniThoughts" placeholder="Thoughts you want to share optional"></textarea>
+      </div>
+
+      <button type="submit" class="btn">Submit for Approval</button>
+    </form>
   </div>
 </div>
 
@@ -190,127 +371,186 @@ footer{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDQZMu4v6XebenpS2cG2NwYN3RYKS6NWUs",
   authDomain: "ustm-ncc-portal.firebaseapp.com",
-  databaseURL: "https://ustm-ncc-portal-default-rtdb.firebaseio.com",
   projectId: "ustm-ncc-portal",
-  storageBucket: "ustm-ncc-portal.firebasestorage.app",
+  storageBucket: "ustm-ncc-portal.appspot.com",
   messagingSenderId: "164517585348",
   appId: "1:164517585348:web:119a2abdb1d871226ec491"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db = getFirestore(app);
 
 let alumniData = [];
+let currentDisplayList = [];
 
-function renderBatchFilters(){
-  const batchFilters = document.getElementById("batchFilters");
-  const batches = [...new Set(alumniData.map(a => a.batch).filter(Boolean))];
+window.openAlumniChoicePopup = function(){
+  document.getElementById("choicePopup").style.display = "flex";
+};
 
-  batchFilters.innerHTML = `
-    <button class="active" onclick="filterAlumni('All', this)">All Batches</button>
-  `;
+window.closeAlumniChoicePopup = function(){
+  document.getElementById("choicePopup").style.display = "none";
+};
 
-  batches.forEach(batch=>{
-    const btn = document.createElement("button");
-    btn.innerText = batch;
-    btn.onclick = function(){ filterAlumni(batch, btn); };
-    batchFilters.appendChild(btn);
-  });
-}
+window.openAlumniForm = function(){
+  closeAlumniChoicePopup();
+  document.getElementById("formPopup").style.display = "flex";
+};
 
-function renderAlumni(batch="All"){
+window.closeAlumniForm = function(){
+  document.getElementById("formPopup").style.display = "none";
+};
+
+window.closeProfilePopup = function(){
+  document.getElementById("profilePopup").style.display = "none";
+};
+
+function renderAlumni(list){
   const grid = document.getElementById("alumniGrid");
   grid.innerHTML = "";
-
-  const list = batch === "All" ? alumniData : alumniData.filter(a => a.batch === batch);
+  currentDisplayList = list;
 
   if(list.length === 0){
     grid.innerHTML = `
       <div class="empty">
-        <h3>No Alumni Records Available</h3>
-        <p>Passed out cadets will appear here after records are uploaded.</p>
+        <h3>No Approved Alumni Records Available</h3>
+        <p>Alumni profiles will appear here after ANO approval.</p>
       </div>
     `;
     return;
   }
 
-  list.forEach(cadet=>{
+  list.forEach((cadet,index)=>{
     const card = document.createElement("div");
     card.className = "alumni-card";
 
     card.innerHTML = `
-      <img src="${cadet.photo || 'ustmncclogo.jpeg'}" alt="${cadet.name || 'Alumni'}">
-      <div class="rank-badge">${cadet.rank || 'Cadet'}</div>
+      <img src="${cadet.photoUrl || 'ustmncclogo.jpeg'}" alt="${cadet.name || 'Alumni'}">
+      <div class="rank-badge">${cadet.rank || 'CDT'}</div>
       <h3>${cadet.name || 'NCC Alumni'}</h3>
-      <p>Batch: ${cadet.batch || 'Not Updated'}</p>
+      <p><strong>NCC Batch</strong><br>${cadet.batch || 'Not Updated'}</p>
+      <p><strong>Occupation</strong><br>${cadet.occupation || 'Not Updated'}</p>
     `;
 
     card.onclick = function(){
-      openAlumniPopup(cadet);
+      openProfile(index);
     };
 
     grid.appendChild(card);
   });
 }
 
-window.filterAlumni = function(batch, button){
-  document.querySelectorAll(".batch-filter button").forEach(btn=>{
-    btn.classList.remove("active");
-  });
+window.openProfile = function(index){
+  const cadet = currentDisplayList[index];
 
-  button.classList.add("active");
-  renderAlumni(batch);
-}
+  document.getElementById("profilePhoto").src = cadet.photoUrl || "ustmncclogo.jpeg";
+  document.getElementById("profileRank").innerText = cadet.rank || "CDT";
+  document.getElementById("profileName").innerText = cadet.name || "NCC Alumni";
+  document.getElementById("profileBatch").innerText = "NCC Batch: " + (cadet.batch || "Not Updated");
+  document.getElementById("profileOccupation").innerText = cadet.occupation || "Not Updated";
+  document.getElementById("profileAchievements").innerText = cadet.achievements || "No achievement added.";
+  document.getElementById("profileThoughts").innerText = cadet.thoughts || "No thoughts shared.";
 
-window.openAlumniPopup = function(cadet){
-  document.getElementById("popupPhoto").src = cadet.photo || "ustmncclogo.jpeg";
-  document.getElementById("popupName").innerText = cadet.name || "NCC Alumni";
-  document.getElementById("popupRank").innerText = cadet.rank || "Cadet";
-  document.getElementById("popupRegt").innerText = cadet.regimentalNumber || "Not Updated";
-  document.getElementById("popupBatch").innerText = cadet.batch || "Not Updated";
-  document.getElementById("popupMessage").innerText =
-    cadet.message && cadet.message.trim() !== ""
-      ? cadet.message
-      : "No message shared yet.";
+  document.getElementById("profilePopup").style.display = "flex";
+};
 
-  document.getElementById("alumniPopup").style.display = "flex";
-}
+window.filterAlumni = function(){
+  const search = document.getElementById("searchAlumni").value.toLowerCase().trim();
 
-window.closeAlumniPopup = function(){
-  document.getElementById("alumniPopup").style.display = "none";
-}
+  const filtered = alumniData.filter(cadet =>
+    String(cadet.name || "").toLowerCase().includes(search) ||
+    String(cadet.rank || "").toLowerCase().includes(search) ||
+    String(cadet.batch || "").toLowerCase().includes(search) ||
+    String(cadet.occupation || "").toLowerCase().includes(search)
+  );
 
-document.getElementById("alumniPopup").addEventListener("click", function(e){
-  if(e.target === this){
-    closeAlumniPopup();
+  renderAlumni(filtered);
+};
+
+document.getElementById("alumniForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  const name = document.getElementById("alumniName").value.trim();
+  const rank = document.getElementById("alumniRank").value;
+  const batch = document.getElementById("alumniBatch").value.trim();
+  const occupation = document.getElementById("alumniOccupation").value.trim();
+  const photoUrl = document.getElementById("alumniPhoto").value.trim();
+  const achievements = document.getElementById("alumniAchievements").value.trim();
+  const thoughts = document.getElementById("alumniThoughts").value.trim();
+
+  try{
+    await addDoc(collection(db,"alumni"),{
+      name:name,
+      rank:rank,
+      batch:batch,
+      occupation:occupation,
+      photoUrl:photoUrl,
+      achievements:achievements,
+      thoughts:thoughts,
+      status:"pending",
+      submittedAt:new Date().toLocaleString()
+    });
+
+    alert("Your alumni profile has been submitted for ANO approval. Jai Hind.");
+
+    document.getElementById("alumniForm").reset();
+    closeAlumniForm();
+
+  }catch(error){
+    console.error(error);
+    alert("Submission failed. Please check Firestore rules.");
   }
 });
 
-onValue(ref(db,"alumni"), snap=>{
+onSnapshot(collection(db,"alumni"), snapshot=>{
   alumniData = [];
 
-  if(snap.exists()){
-    snap.forEach(child=>{
-      const item = child.val();
+  snapshot.forEach(docSnap=>{
+    const item = docSnap.data();
 
+    if(item.status === "approved"){
       alumniData.push({
+        docId:docSnap.id,
         name:item.name || "",
         rank:item.rank || "",
-        regimentalNumber:item.regimentalNumber || "",
         batch:item.batch || "",
-        photo:item.photo || "",
-        message:item.message || ""
+        occupation:item.occupation || "",
+        photoUrl:item.photoUrl || "",
+        achievements:item.achievements || "",
+        thoughts:item.thoughts || ""
       });
-    });
-  }
+    }
+  });
 
-  renderBatchFilters();
-  renderAlumni("All");
+  renderAlumni(alumniData);
+});
+
+document.addEventListener("click",function(e){
+  const profilePopup = document.getElementById("profilePopup");
+  const choicePopup = document.getElementById("choicePopup");
+  const formPopup = document.getElementById("formPopup");
+
+  if(e.target === profilePopup) closeProfilePopup();
+  if(e.target === choicePopup) closeAlumniChoicePopup();
+  if(e.target === formPopup) closeAlumniForm();
+});
+
+document.addEventListener("keydown",function(e){
+  if(e.key === "Escape"){
+    closeProfilePopup();
+    closeAlumniChoicePopup();
+    closeAlumniForm();
+  }
 });
 </script>
 
