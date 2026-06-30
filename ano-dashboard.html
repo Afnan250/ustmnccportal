@@ -217,6 +217,12 @@ th{
   color:white!important;
 }
 
+.delete-cadet-btn{
+  display:block;
+  width:100%!important;
+  margin-top:6px!important;
+}
+
 .rank-select{
   min-width:115px;
   padding:8px;
@@ -430,7 +436,6 @@ footer strong{
           <th>Wing</th>
           <th>Year</th>
           <th>Status</th>
-          <th>Doc ID</th>
           <th>Rank Update</th>
           <th>Action</th>
         </tr>
@@ -438,7 +443,7 @@ footer strong{
 
       <tbody id="cadetTable">
         <tr>
-          <td colspan="9">Loading cadets...</td>
+          <td colspan="8">Loading cadets...</td>
         </tr>
       </tbody>
     </table>
@@ -664,7 +669,7 @@ function loadCadets(){
     if(snapshot.empty){
       tbody.innerHTML = `
         <tr>
-          <td colspan="9">No cadets registered yet.</td>
+          <td colspan="8">No cadets registered yet.</td>
         </tr>
       `;
       return;
@@ -688,7 +693,6 @@ function loadCadets(){
         <td>${cadet.wing || ""}</td>
         <td>${yearText(cadet.cadetYear)}</td>
         <td>${cadet.status || "active"}</td>
-        <td>${docId}</td>
         <td>
           <select class="rank-select" id="rank_${docId}">
            <option value="CDT" ${rank === "CDT" ? "selected" : ""}>LCPL</option>
@@ -705,6 +709,9 @@ function loadCadets(){
           <button class="small-btn success" onclick="markCadetYear('${docId}',2)">2nd</button>
           <button class="small-btn success" onclick="markCadetYear('${docId}',3)">3rd</button>
           <button class="small-btn danger" onclick="markAlumni('${docId}')">Alumni</button>
+          <button class="small-btn danger delete-cadet-btn" onclick="deleteCadet('${docId}')">
+            Delete
+          </button>
         </td>
       `;
 
@@ -773,6 +780,21 @@ window.markAlumni = async function(cadetDocId){
   });
 
   alert("Cadet marked as Alumni.");
+};
+
+
+window.deleteCadet = async function(cadetDocId){
+  if(!confirm("Are you sure you want to permanently delete this cadet?")){
+    return;
+  }
+
+  try{
+    await deleteDoc(doc(db,"cadets",cadetDocId));
+    alert("Cadet deleted successfully.");
+  }catch(error){
+    console.error(error);
+    alert("Failed to delete cadet. Check Firestore rules.");
+  }
 };
 
 function getAttendanceRemark(percent){
