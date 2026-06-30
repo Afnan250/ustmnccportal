@@ -54,13 +54,13 @@ body{
 }
 
 .container{
-  width:min(1450px,94%);
+  width:min(1500px,94%);
   margin:30px auto;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
   gap:25px;
 }
 
@@ -148,6 +148,7 @@ textarea{
   border-radius:10px;
   font-weight:900;
   cursor:pointer;
+  margin:5px 5px 5px 0;
 }
 
 .action-btn:hover{
@@ -174,7 +175,7 @@ textarea{
 }
 
 .search-box{
-  max-width:350px;
+  max-width:380px;
 }
 
 table{
@@ -217,6 +218,11 @@ th{
   color:white!important;
 }
 
+.navy{
+  background:var(--navy)!important;
+  color:white!important;
+}
+
 .delete-cadet-btn{
   display:block;
   width:100%!important;
@@ -232,10 +238,19 @@ th{
 
 .media-preview{
   width:120px;
-  max-height:80px;
+  max-height:90px;
   object-fit:cover;
   border-radius:8px;
   border:1px solid #ddd;
+}
+
+.passport-preview{
+  width:85px;
+  height:105px;
+  object-fit:cover;
+  border-radius:8px;
+  border:2px solid var(--navy);
+  background:#eee;
 }
 
 .notice-list-card{
@@ -335,6 +350,15 @@ footer strong{
     </div>
 
     <div class="card">
+      <i class="fa-solid fa-user-graduate"></i>
+      <h2>Alumni Approvals</h2>
+      <p>Review alumni submissions. Approved profiles will appear on the Alumni Wall.</p>
+      <button onclick="scrollToSection('alumniApprovalSection')">
+        Review Alumni
+      </button>
+    </div>
+
+    <div class="card">
       <i class="fa-solid fa-bullhorn"></i>
       <h2>Notice Board</h2>
       <p>Publish notice with optional photo. Notice expires after 7 days.</p>
@@ -398,6 +422,41 @@ footer strong{
       <tbody id="applicationsTable">
         <tr>
           <td colspan="15">Loading applications...</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="table-box" id="alumniApprovalSection">
+    <div class="table-head">
+      <h2>Alumni Approval Requests</h2>
+      <input class="search-box" id="alumniSearch" placeholder="Search by name, rank, batch, occupation..." oninput="filterAlumniRequests()">
+    </div>
+
+    <button class="action-btn" onclick="downloadAlumniPDF()">
+      <i class="fa-solid fa-file-pdf"></i>
+      Download Alumni PDF
+    </button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Name</th>
+          <th>Rank</th>
+          <th>NCC Batch</th>
+          <th>Occupation</th>
+          <th>Achievements</th>
+          <th>Thoughts</th>
+          <th>Status</th>
+          <th>Submitted At</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="alumniTable">
+        <tr>
+          <td colspan="10">Loading alumni requests...</td>
         </tr>
       </tbody>
     </table>
@@ -471,7 +530,7 @@ footer strong{
 
     <input id="showcaseTitle" placeholder="Showcase Title">
     <textarea id="showcaseCaption" placeholder="Caption / Description"></textarea>
-    
+
     <input type="file" id="showcaseImageFile" accept="image/*">
     <input type="url" id="showcaseVideoUrl" placeholder="Optional video URL, e.g. YouTube/Google Drive public link">
     <select id="showcaseMediaType">
@@ -521,7 +580,7 @@ footer strong{
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-  
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
@@ -552,6 +611,7 @@ const db = getFirestore(app);
 
 let allCadetRows = [];
 let allApplications = [];
+let allAlumniRequests = [];
 
 const CLOUDINARY_CLOUD_NAME = "dgrr5cupl";
 const CLOUDINARY_UPLOAD_PRESET = "ustm_ncc_upload";
@@ -632,18 +692,25 @@ function sendApplicationSMS(phone, message){
   }
 
   const finalPhone = formatPhoneForSMS(phone);
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  const smsLink = `sms:${finalPhone}?body=${encodeURIComponent(message)}`;
-
-  window.location.href = smsLink;
+  if(isMobile){
+    window.location.href = `sms:${finalPhone}?body=${encodeURIComponent(message)}`;
+  }else{
+    alert(
+      "SMS can only open directly on a mobile phone. Copy and send manually.\n\n" +
+      "Phone: " + finalPhone + "\n\n" +
+      "Message:\n" + message
+    );
+  }
 }
 
-function downloadPDF(filename, rows){
+function downloadPDF(filename, rows, title){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("landscape", "mm", "a4");
 
   doc.setFontSize(16);
-  doc.text("USTM NCC Cadet List", 14, 15);
+  doc.text(title || "USTM NCC Report", 14, 15);
 
   doc.setFontSize(12);
   doc.text("42 MEGH BN NCC", 14, 22);
@@ -728,7 +795,8 @@ window.downloadCadetsByYear = async function(year){
 
   downloadPDF(
     `USTM_NCC_${yearText(year).replaceAll(" ","_")}_Cadets.pdf`,
-    rows
+    rows,
+    "USTM NCC Cadet List"
   );
 };
 
@@ -811,7 +879,7 @@ window.approveApplication = async function(docId){
     return;
   }
 
-  if(!confirm("Approve this applicant and open SMS message?")){
+  if(!confirm("Approve this applicant and prepare SMS message?")){
     return;
   }
 
@@ -830,7 +898,7 @@ Please stay prepared with your required documents and follow the official instru
 Jai Hind.
 USTM NCC`;
 
-  alert("Application approved successfully. SMS message will open now.");
+  alert("Application approved successfully.");
   sendApplicationSMS(app.mobile, message);
 };
 
@@ -842,7 +910,7 @@ window.rejectApplication = async function(docId){
     return;
   }
 
-  if(!confirm("Reject this applicant and open SMS message?")){
+  if(!confirm("Reject this applicant and prepare SMS message?")){
     return;
   }
 
@@ -863,41 +931,13 @@ We encourage you to keep improving yourself and apply again in the next opportun
 Jai Hind.
 USTM NCC`;
 
-  alert("Application rejected. SMS message will open now.");
+  alert("Application rejected.");
   sendApplicationSMS(app.mobile, message);
 };
 
 window.downloadApplicationsPDF = function(){
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("landscape", "mm", "a4");
-
-  pdf.setFontSize(16);
-  pdf.text("USTM NCC Enrollment Applications", 14, 15);
-
-  pdf.setFontSize(11);
-  pdf.text("42 MEGH BN NCC", 14, 22);
-  pdf.text("Generated: " + new Date().toLocaleString(), 14, 28);
-
-  const rows = allApplications.map(app=>[
-    app.name || "",
-    app.department || "",
-    app.roll || "",
-    app.semester || "",
-    app.gender || "",
-    app.mobile || "",
-    app.email || "",
-    app.bloodGroup || "",
-    app.hostelStatus || "",
-    app.aCertificate || "",
-    app.sportsCertificate || "",
-    app.culturalCertificate || "",
-    app.status || "pending",
-    app.submittedAt || ""
-  ]);
-
-  pdf.autoTable({
-    startY:35,
-    head:[[
+  const rows = [
+    [
       "Name",
       "Department",
       "Roll",
@@ -912,19 +952,165 @@ window.downloadApplicationsPDF = function(){
       "Cultural",
       "Status",
       "Submitted"
-    ]],
-    body:rows,
-    styles:{
-      fontSize:7,
-      cellPadding:2
-    },
-    headStyles:{
-      fillColor:[6,26,64],
-      textColor:[255,255,255]
-    }
+    ]
+  ];
+
+  allApplications.forEach(app=>{
+    rows.push([
+      app.name || "",
+      app.department || "",
+      app.roll || "",
+      app.semester || "",
+      app.gender || "",
+      app.mobile || "",
+      app.email || "",
+      app.bloodGroup || "",
+      app.hostelStatus || "",
+      app.aCertificate || "",
+      app.sportsCertificate || "",
+      app.culturalCertificate || "",
+      app.status || "pending",
+      app.submittedAt || ""
+    ]);
   });
 
-  pdf.save("USTM_NCC_Enrollment_Applications.pdf");
+  downloadPDF("USTM_NCC_Enrollment_Applications.pdf", rows, "USTM NCC Enrollment Applications");
+};
+
+function loadAlumniRequests(){
+  onSnapshot(collection(db,"alumni"), snapshot=>{
+    allAlumniRequests = [];
+
+    snapshot.forEach(docSnap=>{
+      allAlumniRequests.push({
+        docId:docSnap.id,
+        ...docSnap.data()
+      });
+    });
+
+    displayAlumniRequests(allAlumniRequests);
+  });
+}
+
+function displayAlumniRequests(list){
+  const tbody = document.getElementById("alumniTable");
+  tbody.innerHTML = "";
+
+  if(list.length === 0){
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="10">No alumni requests found.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  list.forEach(item=>{
+    const status = item.status || "pending";
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>
+        <img class="passport-preview" src="${item.photoUrl || 'ustmncclogo.jpeg'}" alt="Alumni Photo">
+      </td>
+      <td>${item.name || ""}</td>
+      <td>${item.rank || ""}</td>
+      <td>${item.batch || ""}</td>
+      <td>${item.occupation || ""}</td>
+      <td>${item.achievements || "Not added"}</td>
+      <td>${item.thoughts || "No thoughts shared"}</td>
+      <td class="status-${status}">${status.toUpperCase()}</td>
+      <td>${item.submittedAt || ""}</td>
+      <td>
+        <button class="small-btn success" onclick="approveAlumni('${item.docId}')">Approve</button>
+        <button class="small-btn danger" onclick="rejectAlumni('${item.docId}')">Reject</button>
+        <button class="small-btn navy" onclick="deleteAlumni('${item.docId}')">Delete</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+}
+
+window.filterAlumniRequests = function(){
+  const search = document.getElementById("alumniSearch").value.toLowerCase().trim();
+
+  const filtered = allAlumniRequests.filter(item =>
+    String(item.name || "").toLowerCase().includes(search) ||
+    String(item.rank || "").toLowerCase().includes(search) ||
+    String(item.batch || "").toLowerCase().includes(search) ||
+    String(item.occupation || "").toLowerCase().includes(search) ||
+    String(item.status || "").toLowerCase().includes(search)
+  );
+
+  displayAlumniRequests(filtered);
+};
+
+window.approveAlumni = async function(docId){
+  if(!confirm("Approve this alumni profile? It will appear on the public Alumni Wall.")){
+    return;
+  }
+
+  await updateDoc(doc(db,"alumni",docId),{
+    status:"approved",
+    approvedAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  });
+
+  alert("Alumni profile approved. It will now show on alumni.html.");
+};
+
+window.rejectAlumni = async function(docId){
+  if(!confirm("Reject this alumni profile?")){
+    return;
+  }
+
+  await updateDoc(doc(db,"alumni",docId),{
+    status:"rejected",
+    updatedAt:new Date().toISOString()
+  });
+
+  alert("Alumni profile rejected.");
+};
+
+window.deleteAlumni = async function(docId){
+  if(!confirm("Delete this alumni profile permanently?")){
+    return;
+  }
+
+  await deleteDoc(doc(db,"alumni",docId));
+  alert("Alumni profile deleted.");
+};
+
+window.downloadAlumniPDF = function(){
+  const rows = [
+    [
+      "Name",
+      "Rank",
+      "NCC Batch",
+      "Occupation",
+      "Achievements",
+      "Thoughts",
+      "Status",
+      "Submitted"
+    ]
+  ];
+
+  allAlumniRequests.forEach(item=>{
+    rows.push([
+      item.name || "",
+      item.rank || "",
+      item.batch || "",
+      item.occupation || "",
+      item.achievements || "",
+      item.thoughts || "",
+      item.status || "pending",
+      item.submittedAt || ""
+    ]);
+  });
+
+  downloadPDF("USTM_NCC_Alumni_Requests.pdf", rows, "USTM NCC Alumni Requests");
 };
 
 function loadCadets(){
@@ -1313,6 +1499,7 @@ window.logoutAno = function(){
 
 loadCadets();
 loadApplications();
+loadAlumniRequests();
 loadNoticesForAno();
 </script>
 
