@@ -90,20 +90,19 @@ body{
 }
 
 .card button{
-  width:100%;
-  margin-top:10px;
-  background:var(--navy);
+  background:#138808;
   color:white;
   border:none;
   padding:13px;
   border-radius:10px;
   font-weight:900;
   cursor:pointer;
+  transition:.3s;
 }
 
 .card button:hover{
-  background:var(--saffron);
-  color:var(--navy);
+  background:#FF9933;
+  color:#061a40;
 }
 
 .download-buttons{
@@ -552,7 +551,7 @@ function yearText(year){
   doc.setFontSize(16);
   doc.text("USTM NCC Cadet List", 14, 15);
 
-  doc.setFontSize(10);
+  doc.setFontSize(12);
   doc.text("42 MEGH BN NCC", 14, 22);
   doc.text("Generated: " + new Date().toLocaleString(), 14, 28);
 
@@ -620,29 +619,29 @@ window.downloadCadetsByYear = async function(year){
   const snapshot = await getDocs(collection(db,"cadets"));
 
   const rows = [
-    [
-      "Cadet ID",
-      "Name",
-      "Rank",
-      "Wing",
-      "Service Year",
-      "Status",
-      "Document ID"
-    ]
+   [
+  "Cadet ID",
+  "Name",
+  "Phone",
+  "Rank",
+  "Wing",
+  "Service Year",
+  "Status"
+]
   ];
 
   snapshot.forEach(docSnap=>{
     const cadet = docSnap.data();
 
     if(Number(cadet.cadetYear) === Number(year)){
-      rows.push([
-        cadet.id || "",
-        cadet.name || "",
-        cadet.rank || "CDT",
-        cadet.wing || "",
-        yearText(cadet.cadetYear),
-        cadet.status || "active",
-        docSnap.id
+    rows.push([
+  cadet.id || "",
+  cadet.name || "",
+  cadet.phone || "",
+  cadet.rank || "CDT",
+  "Army",
+  yearText(cadet.cadetYear),
+  cadet.status || "active"
       ]);
     }
   });
