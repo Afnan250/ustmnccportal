@@ -531,8 +531,9 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
     <div class="flip-side flip-back">
       <div class="login-glass">
         <h3>Cadet Registration</h3>
-        <input type="text" id="registerId" placeholder="ML/2026/SDIA/12345/Cadet/Afnan Al Jedid">
-        <input type="password" id="registerPass" placeholder="Create Password">
+      <input type="text" id="registerId" placeholder="ML-2026-SDIA-12345-Cadet-Arjun Chowdhury">
+<input type="tel" id="registerPhone" placeholder="Enter Phone Number">
+<input type="password" id="registerPass" placeholder="Create Password">
         <p class="note">Format: ML/YEAR/SDIA or SWIA/UNIQUE NUMBER/RANK/NAME</p>
         <button class="btn login-main-btn" onclick="registerCadet()">Register Cadet</button>
         <p class="switch-text">
@@ -899,23 +900,23 @@ document.getElementById("joinForm").addEventListener("submit", async function(e)
 });
 
 window.registerCadet = async function(){
-  const id = document.getElementById("registerId").value.trim();
-  const pass = document.getElementById("registerPass").value.trim();
-
+const id = document.getElementById("registerId").value.trim();
+const phone = document.getElementById("registerPhone").value.trim();
+const pass = document.getElementById("registerPass").value.trim();
   const pattern = /^ML[-/]\d{4}[-/](SDIA|SWIA)[-/]\d+[-/][A-Za-z ]+[-/][A-Za-z ]+$/;
 
-  if(id === "" || pass === ""){
-    alert("Please fill all fields.");
-    return;
-  }
-
+if(id === "" || phone === "" || pass === ""){
+  alert("Please fill all fields including phone number.");
+  return;
+}
+  
   if(!pattern.test(id)){
     alert("Invalid Cadet ID format. Example: ML-2026-SDIA-12345-Cadet-Afnan Al Jedid");
     return;
   }
 
-  if(pass.length < 4){
-    alert("Password must be at least 4 characters.");
+  if(pass.length < 6){
+    alert("Password must be at least 6 characters.");
     return;
   }
 
@@ -924,9 +925,10 @@ window.registerCadet = async function(){
   const key = safeKey(cleanId);
 
   try{
-    await setDoc(doc(db,"cadets",key), {
-      id:cleanId,
-      password:pass,
+ await setDoc(doc(db,"cadets",key), {
+  id:cleanId,
+  phone:phone,
+  password:pass,
       year:parts[1],
       wing:parts[2],
       rank:parts[4],
