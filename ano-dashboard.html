@@ -541,6 +541,8 @@ footer strong{
     <button class="action-btn" id="showcaseBtn" onclick="uploadShowcase()">
       Update Gallery
     </button>
+
+    <div id="galleryItemsList"></div>
   </section>
 
   <section class="table-box">
@@ -1493,6 +1495,69 @@ window.uploadShowcase = async function(){
   }
 };
 
+function loadGalleryItemsForAno(){
+  onSnapshot(collection(db,"showcase"), snapshot=>{
+    const box = document.getElementById("galleryItemsList");
+    if(!box) return;
+
+    box.innerHTML = "";
+
+    if(snapshot.empty){
+      box.innerHTML = `
+        <div class="notice-list-card">
+          <h3>No gallery items uploaded yet.</h3>
+          <p>Photos/videos uploaded by ANO or cadets will appear here for management.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const items = [];
+    snapshot.forEach(docSnap=>{
+      items.push({ docId:docSnap.id, ...docSnap.data() });
+    });
+
+    items.sort((a,b)=> String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+
+    items.forEach(item=>{
+      const div = document.createElement("div");
+      div.className = "notice-list-card";
+
+      let mediaHTML = "";
+      if(item.mediaUrl){
+        if(String(item.mediaType || "").toLowerCase() === "video"){
+          mediaHTML = `<video class="media-preview" controls src="${item.mediaUrl}"></video>`;
+        }else{
+          mediaHTML = `<img class="media-preview" src="${item.mediaUrl}" alt="Gallery Media">`;
+        }
+      }
+
+      div.innerHTML = `
+        <h3>${item.title || "Gallery Item"}</h3>
+        <p>${item.caption || ""}</p>
+        <small>Uploaded By: ${item.uploadedBy || "Unknown"} | Date: ${item.createdAt || ""}</small>
+        <br><br>
+        ${mediaHTML}
+        <br>
+        <button class="small-btn danger" onclick="deleteGalleryItem('${item.docId}')">
+          Delete Gallery Item
+        </button>
+      `;
+
+      box.appendChild(div);
+    });
+  });
+}
+
+window.deleteGalleryItem = async function(itemId){
+  if(!confirm("Delete this gallery item permanently?")){
+    return;
+  }
+
+  await deleteDoc(doc(db,"showcase",itemId));
+  alert("Gallery item deleted.");
+};
+
 window.logoutAno = function(){
   localStorage.removeItem("activeAnoId");
   window.location.href = "index.html";
@@ -1502,6 +1567,7 @@ loadCadets();
 loadApplications();
 loadAlumniRequests();
 loadNoticesForAno();
+loadGalleryItemsForAno();
 </script>
 
 </body>
