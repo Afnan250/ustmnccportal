@@ -3,266 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Achievement Gallery | USTM NCC</title>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-:root{
-  --navy:#061a40;
-  --saffron:#ff9933;
-  --green:#138808;
-  --light:#f4f7fc;
-}
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Segoe UI,Arial,sans-serif;
-}
-
-body{
-  background:var(--light);
-  color:var(--navy);
-}
-
-.header{
-  background:linear-gradient(135deg,#041433,#08275d);
-  color:white;
-  padding:28px 5%;
-  text-align:center;
-}
-
-.header h1{
-  color:var(--saffron);
-  margin-bottom:8px;
-}
-
-.header p{
-  opacity:.9;
-}
-
-.back-btn{
-  display:inline-block;
-  margin-top:18px;
-  padding:11px 22px;
-  background:var(--green);
-  color:white;
-  text-decoration:none;
-  border-radius:10px;
-  font-weight:800;
-}
-
-.back-btn:hover{
-  background:var(--saffron);
-  color:var(--navy);
-}
-
-.gallery-container{
-  width:min(1200px,94%);
-  margin:35px auto;
-}
-
-.gallery-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:25px;
-}
-
-.gallery-card{
-  background:white;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 -3px 16px rgba(255,153,51,.55),
-             0 3px 18px rgba(19,136,8,.45),
-             0 12px 25px rgba(7,26,61,.12);
-  border-top:5px solid var(--saffron);
-}
-
-.gallery-card img,
-.gallery-card video{
-  width:100%;
-  height:230px;
-  object-fit:cover;
-  display:block;
-  background:#ddd;
-}
-
-.gallery-content{
-  padding:18px;
-}
-
-.gallery-content h3{
-  margin-bottom:8px;
-  color:var(--navy);
-}
-
-.gallery-content p{
-  color:#444;
-  line-height:1.5;
-  font-size:15px;
-}
-
-.empty{
-  grid-column:1/-1;
-  text-align:center;
-  padding:45px;
-  background:white;
-  border-radius:18px;
-  font-weight:800;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-
-footer{
-  text-align:center;
-  background:linear-gradient(135deg,#041433,#08275d);
-  color:white;
-  padding:24px;
-  margin-top:40px;
-}
-
-footer strong{
-  color:var(--saffron);
-}
-
-@media(max-width:600px){
-  .header h1{
-    font-size:25px;
-  }
-
-  .gallery-card img,
-  .gallery-card video{
-    height:210px;
-  }
-}
+:root{--navy:#061a40;--saffron:#ff9933;--green:#138808;--light:#f4f7fc}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif}body{background:var(--light);color:var(--navy)}
+.header{background:linear-gradient(135deg,#041433,#08275d);color:white;padding:28px 5%;text-align:center}.header h1{color:var(--saffron);margin-bottom:8px}.header p{opacity:.9}.back-btn{display:inline-block;margin-top:18px;padding:11px 22px;background:var(--green);color:white;text-decoration:none;border-radius:10px;font-weight:800}.back-btn:hover{background:var(--saffron);color:var(--navy)}
+.gallery-container{width:min(1200px,94%);margin:35px auto}.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px}.gallery-card{background:white;border-radius:18px;overflow:hidden;box-shadow:0 -3px 16px rgba(255,153,51,.55),0 3px 18px rgba(19,136,8,.45),0 12px 25px rgba(7,26,61,.12);border-top:5px solid var(--saffron)}.gallery-card img,.gallery-card video{width:100%;height:230px;object-fit:cover;display:block;background:#ddd}.gallery-content{padding:18px}.gallery-content h3{margin-bottom:8px;color:var(--navy)}.gallery-content p{color:#444;line-height:1.5;font-size:15px}.meta{font-size:12px;color:#666;margin-top:10px}.empty{grid-column:1/-1;text-align:center;padding:45px;background:white;border-radius:18px;font-weight:800;box-shadow:0 10px 25px rgba(0,0,0,.08)}
+footer{text-align:center;background:linear-gradient(135deg,#041433,#08275d);color:white;padding:24px;margin-top:40px}footer strong{color:var(--saffron)}@media(max-width:600px){.header h1{font-size:25px}.gallery-card img,.gallery-card video{height:210px}}
 </style>
 </head>
-
 <body>
-
-<header class="header">
-  <h1>USTM NCC Gallery</h1>
-  <p>Official gallery photos and videos uploaded by ANO.</p>
-
-  <a href="./index.html" class="back-btn">
-    <i class="fa-solid fa-arrow-left"></i>
-    Back to NCC Page
-  </a>
-</header>
-
-<main class="gallery-container">
-  <div class="gallery-grid" id="galleryGrid">
-    <div class="empty">Loading gallery...</div>
-  </div>
-</main>
-
-<footer>
-  <p><strong>USTM NCC</strong> | 42 MEGH BN NCC</p>
-  <p>© 2026 USTM NCC</p>
-</footer>
-
+<header class="header"><h1>USTM NCC Gallery</h1><p>Photos/videos of our achivements, events and many more will be uploaded here.</p><a href="./index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to NCC Page</a></header>
+<main class="gallery-container"><div class="gallery-grid" id="galleryGrid"><div class="empty">Loading gallery...</div></div></main>
+<footer><p><strong>USTM NCC</strong> | 42 MEGH BN NCC</p><p>© 2026 USTM NCC</p></footer>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-
-import {
-  getFirestore,
-  collection,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDQZMu4v6XebenpS2cG2NwYN3RYKS6NWUs",
-  authDomain: "ustm-ncc-portal.firebaseapp.com",
-  projectId: "ustm-ncc-portal",
-  storageBucket: "ustm-ncc-portal.appspot.com",
-  messagingSenderId: "164517585348",
-  appId: "1:164517585348:web:119a2abdb1d871226ec491"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const galleryGrid = document.getElementById("galleryGrid");
-
-function safeText(text){
-  return String(text || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function loadGallery(){
-  onSnapshot(collection(db,"showcase"), snapshot=>{
-    galleryGrid.innerHTML = "";
-
-    if(snapshot.empty){
-      galleryGrid.innerHTML = `
-        <div class="empty">No gallery photo/video uploaded yet.</div>
-      `;
-      return;
-    }
-
-    snapshot.forEach(docSnap=>{
-      const item = docSnap.data();
-
-      if(!item.mediaUrl){
-        return;
-      }
-
-      const title = safeText(item.title || "USTM NCC Gallery");
-      const caption = safeText(item.caption || "");
-      const mediaUrl = safeText(item.mediaUrl || "");
-      const mediaType = String(item.mediaType || "image").toLowerCase();
-
-      const card = document.createElement("div");
-      card.className = "gallery-card";
-
-      let mediaHTML = "";
-
-      if(mediaType === "video"){
-        mediaHTML = `
-          <video controls src="${mediaUrl}">
-            Your browser does not support video.
-          </video>
-        `;
-      }else{
-        mediaHTML = `
-          <img src="${mediaUrl}" alt="${title}">
-        `;
-      }
-
-      card.innerHTML = `
-        ${mediaHTML}
-        <div class="gallery-content">
-          <h3>${title}</h3>
-          <p>${caption}</p>
-        </div>
-      `;
-
-      galleryGrid.appendChild(card);
-    });
-
-    if(galleryGrid.innerHTML.trim() === ""){
-      galleryGrid.innerHTML = `
-        <div class="empty">No valid gallery media found.</div>
-      `;
-    }
-  }, error=>{
-    console.error(error);
-    galleryGrid.innerHTML = `
-      <div class="empty">
-        Gallery could not load. Please check Firebase rules and internet connection.
-      </div>
-    `;
-  });
-}
-
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyDQZMu4v6XebenpS2cG2NwYN3RYKS6NWUs",authDomain:"ustm-ncc-portal.firebaseapp.com",projectId:"ustm-ncc-portal",storageBucket:"ustm-ncc-portal.appspot.com",messagingSenderId:"164517585348",appId:"1:164517585348:web:119a2abdb1d871226ec491"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);const galleryGrid=document.getElementById("galleryGrid");
+function safeText(text){return String(text||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
+function loadGallery(){onSnapshot(collection(db,"showcase"),snapshot=>{galleryGrid.innerHTML="";if(snapshot.empty){galleryGrid.innerHTML=`<div class="empty">No gallery photo/video uploaded yet.</div>`;return;}const items=[];snapshot.forEach(docSnap=>items.push({docId:docSnap.id,...docSnap.data()}));items.sort((a,b)=>String(b.createdAt||"").localeCompare(String(a.createdAt||"")));items.forEach(item=>{if(!item.mediaUrl)return;const title=safeText(item.title||"USTM NCC Gallery");const caption=safeText(item.caption||"");const mediaUrl=safeText(item.mediaUrl||"");const mediaType=String(item.mediaType||"image").toLowerCase();const uploadedBy=safeText(item.uploadedBy||"USTM NCC");const card=document.createElement("div");card.className="gallery-card";card.innerHTML=`${mediaType==="video"?`<video controls src="${mediaUrl}">Your browser does not support video.</video>`:`<img src="${mediaUrl}" alt="${title}">`}<div class="gallery-content"><h3>${title}</h3><p>${caption}</p><div class="meta">Uploaded By: ${uploadedBy}</div></div>`;galleryGrid.appendChild(card);});if(galleryGrid.innerHTML.trim()===""){galleryGrid.innerHTML=`<div class="empty">No valid gallery media found.</div>`;}},error=>{console.error(error);galleryGrid.innerHTML=`<div class="empty">Gallery could not load. Please check Firebase rules and internet connection.</div>`;});}
 loadGallery();
 </script>
-
 </body>
 </html>
