@@ -467,18 +467,6 @@ footer strong{
 
   <article class="tricolor-card">
     <div class="card-content">
-      <i class="fa-solid fa-bullhorn card-icon"></i>
-      <h2>Notice Board</h2>
-      <div class="card-divider"></div>
-      <h3 id="noticeTitle">No Notice Available</h3>
-      <p id="noticeContent">Waiting for official updates.</p>
-      <small class="notice-meta" id="noticeBy"></small>
-      <div id="noticeMediaBox" style="margin-top:15px;"></div>
-    </div>
-  </article>
-
-  <article class="tricolor-card">
-    <div class="card-content">
       <i class="fa-regular fa-calendar-check card-icon"></i>
       <h2>Attendance</h2>
       <div class="card-divider"></div>
@@ -518,12 +506,12 @@ footer strong{
       <i class="fa-solid fa-trophy card-icon"></i>
       <h2>Achievement Gallery Upload</h2>
       <div class="card-divider"></div>
-      <p>Upload your achievement photo directly for ANO approval.</p>
+      <p>Upload your achievement photo directly to the USTM NCC Achievement Gallery.</p>
 
       <input
         type="file"
         id="achievementFile"
-        accept="image/*"
+        accept="image/*,video/*"
         class="achievement-input"
       >
 
@@ -816,58 +804,6 @@ window.removeProfilePhoto = async function(){
   }
 };
 
-function loadNotices(){
-  const noticesQuery = query(
-    collection(db,"notices"),
-    orderBy("createdAt","desc"),
-    limit(1)
-  );
-
-  onSnapshot(noticesQuery,snapshot=>{
-    if(snapshot.empty) return;
-
-    const notice = snapshot.docs[0].data();
-    showNotice(notice);
-
-  },()=>{
-    onSnapshot(collection(db,"notices"),snapshot=>{
-      let latest = null;
-
-      snapshot.forEach(docSnap=>{
-        latest = docSnap.data();
-      });
-
-      if(latest) showNotice(latest);
-    });
-  });
-}
-
-function showNotice(notice){
-  document.getElementById("noticeTitle").textContent =
-    notice.title || "Official Notice";
-
-  document.getElementById("noticeContent").textContent =
-    notice.content || "";
-
-  document.getElementById("noticeBy").textContent =
-    `Published by: ${notice.by || "ANO"} | ${notice.date || ""}`;
-
-  const mediaBox = document.getElementById("noticeMediaBox");
-  mediaBox.innerHTML = "";
-
-  if(notice.mediaUrl){
-    if(String(notice.mediaType || "").startsWith("video")){
-      mediaBox.innerHTML =
-        `<video controls style="width:100%;border-radius:12px;margin-top:12px;">
-          <source src="${notice.mediaUrl}">
-        </video>`;
-    }else{
-      mediaBox.innerHTML =
-        `<img src="${notice.mediaUrl}" alt="Notice Photo" style="width:100%;border-radius:12px;margin-top:12px;">`;
-    }
-  }
-}
-
 function updateAttendanceUI(data){
   const percent = Number(data.percent);
 
@@ -939,12 +875,15 @@ window.uploadAchievement = async function(){
   const btn = document.getElementById("achievementBtn");
 
   if(!file){
-    alert("Please choose an achievement photo.");
+    alert("Please choose an achievement photo or video.");
     return;
   }
 
-  if(!file.type.startsWith("image/")){
-    alert("Please upload only image files.");
+  const isImage = file.type.startsWith("image/");
+  const isVideo = file.type.startsWith("video/");
+
+  if(!isImage && !isVideo){
+    alert("Please upload only image or video files.");
     return;
   }
 
@@ -952,22 +891,26 @@ window.uploadAchievement = async function(){
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
     btn.disabled = true;
 
-    const imageURL = await uploadToCloudinary(file);
+    const mediaURL = await uploadToCloudinary(file);
+    const mediaType = isVideo ? "video" : "image";
+    const cadetName = currentCadet?.name || "USTM NCC Cadet";
 
-    await addDoc(collection(db,"gallery"),{
-      url:imageURL,
+    await addDoc(collection(db,"showcase"),{
+      title:"Cadet Achievement",
+      caption:`Uploaded by ${cadetName}`,
+      mediaUrl:mediaURL,
+      mediaType:mediaType,
+      uploadedBy:"Cadet",
       cadetId:currentCadet?.id || cadetId,
       attendanceKey:attendanceKey,
       cadetKey:cadetKey,
-      cadetName:currentCadet?.name || "",
-      status:"pending",
-      removed:false,
-      submittedAt:new Date().toISOString()
+      cadetName:cadetName,
+      createdAt:new Date().toISOString()
     });
 
     document.getElementById("achievementFile").value = "";
 
-    alert("Achievement photo uploaded successfully for ANO approval.");
+    alert("Achievement uploaded successfully. It will now appear in the Achievement Gallery.");
   }catch(error){
     console.error(error);
     alert("Achievement upload failed. Check Cloudinary preset settings.");
@@ -987,7 +930,6 @@ loadCadet().then(()=>{
   loadAttendance();
 });
 
-loadNotices();
 loadCampUpdate();
 </script>
 
