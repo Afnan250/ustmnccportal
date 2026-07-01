@@ -378,10 +378,10 @@ footer strong{
 
     <div class="card">
       <i class="fa-solid fa-photo-film"></i>
-      <h2>Showcase Upload</h2>
-      <p>Upload photos directly or paste video links for the main showcase/gallery.</p>
+      <h2>Gallery Update</h2>
+      <p>Upload photos or video links directly to the USTM Achievement Gallery.</p>
       <button onclick="scrollToSection('showcaseSection')">
-        Upload Showcase
+        Update Gallery
       </button>
     </div>
 
@@ -526,9 +526,9 @@ footer strong{
   </section>
 
   <section class="form-section" id="showcaseSection">
-    <h2>Add Showcase Photo / Video</h2>
+    <h2>Add Gallery Photo / Video</h2>
 
-    <input id="showcaseTitle" placeholder="Showcase Title">
+    <input id="showcaseTitle" placeholder="Gallery Title">
     <textarea id="showcaseCaption" placeholder="Caption / Description"></textarea>
 
     <input type="file" id="showcaseImageFile" accept="image/*">
@@ -539,7 +539,7 @@ footer strong{
     </select>
 
     <button class="action-btn" id="showcaseBtn" onclick="uploadShowcase()">
-      Upload Showcase
+      Update Gallery
     </button>
   </section>
 
@@ -1452,7 +1452,7 @@ window.uploadShowcase = async function(){
   }
 
   try{
-    btn.textContent = "Uploading...";
+    btn.textContent = "Updating Gallery...";
     btn.disabled = true;
 
     let mediaUrl = "";
@@ -1472,10 +1472,11 @@ window.uploadShowcase = async function(){
       mediaUrl:mediaUrl,
       mediaType:finalMediaType,
       uploadedBy:"ANO",
+      visibleOn:"achivement-gallery.html",
       createdAt:new Date().toISOString()
     });
 
-    alert("Showcase submitted successfully.");
+    alert("Gallery item uploaded successfully. It will now show on achivement-gallery.html.");
 
     document.getElementById("showcaseTitle").value = "";
     document.getElementById("showcaseCaption").value = "";
@@ -1487,7 +1488,7 @@ window.uploadShowcase = async function(){
     console.error(error);
     alert("Showcase upload failed. Check Cloudinary preset or Firestore rules.");
   }finally{
-    btn.textContent = "Upload Showcase";
+    btn.textContent = "Update Gallery";
     btn.disabled = false;
   }
 };
