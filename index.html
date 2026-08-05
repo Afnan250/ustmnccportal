@@ -582,10 +582,10 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
           <select id="registerYear" aria-label="Enrollment year">
             <option value="">Enrollment Year</option>
           </select>
-          <select id="registerWing" aria-label="Wing">
-            <option value="">Select Wing</option>
-            <option value="SDIA">SDIA</option>
-            <option value="SWIA">SWIA</option>
+          <select id="registerGender" aria-label="Gender">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
           <input type="text" id="registerNumber" inputmode="numeric" placeholder="Cadet Number, e.g. 4980182">
           <input type="text" id="registerRank" placeholder="Rank, e.g. CDT / CPL / SGT">
@@ -907,9 +907,16 @@ function normalizePart(value){
   return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 }
 
+function wingFromGender(gender){
+  if(gender === "male") return "SDIA";
+  if(gender === "female") return "SWIA";
+  return "";
+}
+
 function buildRegimentalNumber(){
   const year = normalizePart(document.getElementById("registerYear")?.value);
-  const wing = normalizePart(document.getElementById("registerWing")?.value);
+  const gender = document.getElementById("registerGender")?.value || "";
+  const wing = wingFromGender(gender);
   const number = normalizePart(document.getElementById("registerNumber")?.value);
   const rank = normalizePart(document.getElementById("registerRank")?.value);
   const name = normalizePart(document.getElementById("registerName")?.value);
@@ -962,7 +969,7 @@ if(yearSelect){
     option.value = String(y); option.textContent = String(y); yearSelect.appendChild(option);
   }
 }
-["registerYear","registerWing","registerNumber","registerRank","registerName"].forEach(id=>{
+["registerYear","registerGender","registerNumber","registerRank","registerName"].forEach(id=>{
   document.getElementById(id)?.addEventListener("input", updateRegimentalPreview);
   document.getElementById(id)?.addEventListener("change", updateRegimentalPreview);
 });
@@ -999,7 +1006,8 @@ document.getElementById("joinForm")?.addEventListener("submit", async function(e
 
 window.registerCadet = async function(){
   const year = document.getElementById("registerYear").value;
-  const wing = document.getElementById("registerWing").value;
+  const gender = document.getElementById("registerGender").value;
+  const wing = wingFromGender(gender);
   const number = normalizePart(document.getElementById("registerNumber").value);
   const rank = normalizePart(document.getElementById("registerRank").value);
   const fullName = document.getElementById("registerName").value.trim().replace(/\s+/g," ").toUpperCase();
@@ -1007,7 +1015,7 @@ window.registerCadet = async function(){
   const password = document.getElementById("registerPass").value;
   const confirmPassword = document.getElementById("registerConfirmPass").value;
 
-  if(!year || !wing || !number || !rank || !fullName || !phone || !password || !confirmPassword){
+  if(!year || !gender || !wing || !number || !rank || !fullName || !phone || !password || !confirmPassword){
     alert("Please fill every registration field."); return;
   }
   if(!/^\d+$/.test(number)){ alert("Cadet Number must contain digits only."); return; }
@@ -1021,7 +1029,7 @@ window.registerCadet = async function(){
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email: hiddenEmail,
     password,
-    options: { data: { regimental_number: regimentalNumber, full_name: fullName, phone } }
+    options: { data: { regimental_number: regimentalNumber, full_name: fullName, phone, gender, wing } }
   });
   if(authError){ console.error(authError); alert("Registration failed: " + authError.message); return; }
   if(!authData.user){ alert("Registration could not be completed."); return; }
@@ -1031,6 +1039,7 @@ window.registerCadet = async function(){
     cadet_id: regimentalNumber,
     phone,
     joining_year: Number(year),
+    gender,
     wing,
     rank,
     full_name: fullName,
