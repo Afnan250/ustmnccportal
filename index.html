@@ -553,8 +553,8 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
           <option value="cadet">Cadet Login</option>
           <option value="ano">ANO Admin Login</option>
         </select>
-        <input type="text" id="loginId" placeholder="Enter ID">
-        <input type="password" id="loginPass" placeholder="Enter Password">
+        <input type="text" id="loginId" placeholder="Cadet Email or ANO ID" autocomplete="username">
+        <input type="password" id="loginPass" placeholder="Enter Password" autocomplete="current-password">
       <button type="button" class="btn login-main-btn" onclick="login()">Login</button>
         <p class="switch-text">
           Cadet not registered?
@@ -566,9 +566,10 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
     <div class="flip-side flip-back">
       <div class="login-glass">
         <h3>Cadet Registration</h3>
-      <input type="text" id="registerId" placeholder="ML-2026-SDIA-12345-Cadet-Arjun Chowdhury">
-<input type="tel" id="registerPhone" placeholder="Enter Phone Number">
-<input type="password" id="registerPass" placeholder="Create Password">
+        <input type="text" id="registerId" placeholder="ML-2026-SDIA-12345-Cadet-Arjun Chowdhury">
+        <input type="tel" id="registerPhone" placeholder="Enter 10-digit Phone Number" inputmode="numeric" maxlength="10">
+        <input type="email" id="registerEmail" placeholder="Enter Email Address" autocomplete="email">
+        <input type="password" id="registerPass" placeholder="Create Password (minimum 6 characters)" autocomplete="new-password">
         <p class="note">Format: ML/YEAR/SDIA or SWIA/UNIQUE NUMBER/RANK/NAME</p>
         <button class="btn login-main-btn" onclick="registerCadet()">Register Cadet</button>
         <p class="switch-text">
@@ -867,32 +868,11 @@ But the Quartermaster of Badluram’s company didn’t remove Badluram’s name 
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  addDoc,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDQZMu4v6XebenpS2cG2NwYN3RYKS6NWUs",
-  authDomain: "ustm-ncc-portal.firebaseapp.com",
-  projectId: "ustm-ncc-portal",
-  storageBucket: "ustm-ncc-portal.appspot.com",
-  messagingSenderId: "164517585348",
-  appId: "1:164517585348:web:119a2abdb1d871226ec491"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-function safeKey(id){
-  return id.replaceAll("/", "-").replaceAll(" ", "-").toUpperCase();
-}
+const SUPABASE_URL = "https://yrtzeqrwhdisqtlesrrz.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_hAn0YXokHG80Qn9TBvjxKQ_e5ZWh0lK";
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 function isRecruitmentOpen(){
   const month = new Date().getMonth() + 1;
@@ -932,21 +912,16 @@ window.flipToLogin = function(){
 
 window.openJoinPopup = function(){
   document.getElementById("joinPopup").style.display = "flex";
-
-  if(isRecruitmentOpen()){
-    document.getElementById("joinOpenBox").style.display = "block";
-    document.getElementById("joinClosedBox").style.display = "none";
-  }else{
-    document.getElementById("joinOpenBox").style.display = "none";
-    document.getElementById("joinClosedBox").style.display = "block";
-  }
+  document.getElementById("joinOpenBox").style.display = isRecruitmentOpen() ? "block" : "none";
+  document.getElementById("joinClosedBox").style.display = isRecruitmentOpen() ? "none" : "block";
 };
 
 window.closeJoinPopup = function(){
   document.getElementById("joinPopup").style.display = "none";
 };
 
-document.getElementById("joinForm").addEventListener("submit", async function(e){
+const joinForm = document.getElementById("joinForm");
+joinForm?.addEventListener("submit", async function(e){
   e.preventDefault();
 
   if(!isRecruitmentOpen()){
@@ -954,101 +929,157 @@ document.getElementById("joinForm").addEventListener("submit", async function(e)
     return;
   }
 
-  try{
-    await addDoc(collection(db,"nccApplications"), {
-      name:document.getElementById("appName").value.trim(),
-      department:document.getElementById("appDepartment").value.trim(),
-      roll:document.getElementById("appRoll").value.trim(),
-      semester:document.getElementById("appSemester").value.trim(),
-      gender:document.getElementById("appGender").value,
-      mobile:document.getElementById("appMobile").value.trim(),
-      email:document.getElementById("appEmail").value.trim(),
-      height:document.getElementById("appHeight").value.trim(),
-      bloodGroup:document.getElementById("appBlood").value,
-      hostelStatus:document.getElementById("appHostel").value,
-      emergencyContact:document.getElementById("appEmergency").value.trim(),
-      aCertificate:document.getElementById("appAcer").value,
-      sportsCertificate:document.getElementById("appSports").value,
-      culturalCertificate:document.getElementById("appCultural").value,
-      medicalIssues:document.getElementById("appMedical").value.trim(),
-      skills:document.getElementById("appSkills").value.trim(),
-      reason:document.getElementById("appReason").value.trim(),
-      status:"pending",
-      submittedAt:new Date().toLocaleString()
-    });
+  const mobile = document.getElementById("appMobile").value.trim();
+  const emergency = document.getElementById("appEmergency").value.trim();
 
-    alert("Your NCC application has been submitted successfully. Jai Hind.");
-    document.getElementById("joinForm").reset();
-    closeJoinPopup();
-  }catch(error){
-    alert("Application submit failed. Check Firestore rules.");
-    console.error(error);
-  }
-});
-
-window.registerCadet = async function(){
-const id = document.getElementById("registerId").value.trim();
-const phone = document.getElementById("registerPhone").value.trim();
-const pass = document.getElementById("registerPass").value.trim();
-  const pattern = /^ML[-/]\d{4}[-/](SDIA|SWIA)[-/]\d+[-/][A-Za-z ]+[-/][A-Za-z ]+$/;
-
-if(id === "" || phone === "" || pass === ""){
-  alert("Please fill all fields including phone number.");
-  return;
-}
-  
-  if(!pattern.test(id)){
-    alert("Invalid Cadet ID format. Example: ML-2026-SDIA-12345-Cadet-Afnan Al Jedid");
+  if(!/^\d{10}$/.test(mobile)){
+    alert("Please enter a valid 10-digit mobile number.");
     return;
   }
 
-  if(pass.length < 6){
+  if(emergency && !/^\d{10}$/.test(emergency)){
+    alert("Please enter a valid 10-digit emergency contact number.");
+    return;
+  }
+
+  const { error } = await supabase.from("ncc_applications").insert({
+    name: document.getElementById("appName").value.trim(),
+    department: document.getElementById("appDepartment").value.trim(),
+    roll: document.getElementById("appRoll").value.trim(),
+    semester: document.getElementById("appSemester").value.trim(),
+    gender: document.getElementById("appGender").value,
+    mobile,
+    email: document.getElementById("appEmail").value.trim() || null,
+    height: document.getElementById("appHeight").value.trim(),
+    blood_group: document.getElementById("appBlood").value,
+    hostel_status: document.getElementById("appHostel").value,
+    emergency_contact: emergency,
+    a_certificate: document.getElementById("appAcer").value,
+    sports_certificate: document.getElementById("appSports").value,
+    cultural_certificate: document.getElementById("appCultural").value,
+    medical_issues: document.getElementById("appMedical").value.trim(),
+    skills: document.getElementById("appSkills").value.trim(),
+    reason: document.getElementById("appReason").value.trim(),
+    status: "pending"
+  });
+
+  if(error){
+    console.error("Application submission error:", error);
+    alert(`Application submission failed: ${error.message}`);
+    return;
+  }
+
+  alert("Your NCC application has been submitted successfully. Jai Hind.");
+  joinForm.reset();
+  window.closeJoinPopup();
+});
+
+window.registerCadet = async function(){
+  const id = document.getElementById("registerId").value.trim();
+  const phone = document.getElementById("registerPhone").value.trim();
+  const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+  const password = document.getElementById("registerPass").value;
+  const pattern = /^ML[-/]\d{4}[-/](SDIA|SWIA)[-/]\d+[-/][A-Za-z ]+[-/][A-Za-z ]+$/i;
+
+  if(!id || !phone || !email || !password){
+    alert("Please fill Cadet ID, phone number, email and password.");
+    return;
+  }
+
+  if(!pattern.test(id)){
+    alert("Invalid Cadet ID format. Example: ML-2026-SDIA-12345-Cadet-Arjun Chowdhury");
+    return;
+  }
+
+  if(!/^\d{10}$/.test(phone)){
+    alert("Please enter a valid 10-digit phone number.");
+    return;
+  }
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  if(password.length < 6){
     alert("Password must be at least 6 characters.");
     return;
   }
 
-  const cleanId = id.replaceAll("/", "-");
+  const cleanId = id.replaceAll("/", "-").replace(/\s+/g, " ").trim().toUpperCase();
   const parts = cleanId.split("-");
-  const key = safeKey(cleanId);
 
-  try{
- await setDoc(doc(db,"cadets",key), {
-  id:cleanId,
-  phone:phone,
-  password:pass,
-      year:parts[1],
-      wing:parts[2],
-      rank:parts[4],
-      name:parts.slice(5).join(" "),
-      cadetYear:1,
-      status:"active",
-      createdAt:new Date().toLocaleString()
-    });
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { cadet_id: cleanId, phone }
+    }
+  });
 
-    alert("Cadet registration successful. Now login.");
-    document.getElementById("loginType").value = "cadet";
-    document.getElementById("loginId").value = cleanId;
-    document.getElementById("loginPass").value = "";
-    flipToLogin();
-  }catch(error){
-    alert("Registration failed. Check Firestore rules.");
-    console.error(error);
+  if(signUpError){
+    console.error("Registration auth error:", signUpError);
+    alert(`Registration failed: ${signUpError.message}`);
+    return;
   }
+
+  const user = signUpData.user;
+  const session = signUpData.session;
+
+  if(!user){
+    alert("Registration could not be completed. Please try again.");
+    return;
+  }
+
+  if(!session){
+    alert("Account created. Please verify your email first. After verification, contact the portal administrator to complete your cadet profile, or temporarily disable email confirmation while testing.");
+    window.flipToLogin();
+    document.getElementById("loginId").value = email;
+    return;
+  }
+
+  const { error: profileError } = await supabase.from("cadets").insert({
+    user_id: user.id,
+    cadet_id: cleanId,
+    phone,
+    joining_year: Number(parts[1]),
+    wing: parts[2],
+    rank: parts[4],
+    full_name: parts.slice(5).join(" "),
+    cadet_year: 1,
+    status: "active"
+  });
+
+  if(profileError){
+    console.error("Cadet profile error:", profileError);
+    await supabase.auth.signOut();
+    alert(`Account was created, but the cadet profile could not be saved: ${profileError.message}`);
+    return;
+  }
+
+  localStorage.setItem("activeCadetId", cleanId);
+  localStorage.setItem("activeCadetUserId", user.id);
+  alert("Cadet registration successful. You can now log in with your email and password.");
+  await supabase.auth.signOut();
+  document.getElementById("loginType").value = "cadet";
+  document.getElementById("loginId").value = email;
+  document.getElementById("loginPass").value = "";
+  window.flipToLogin();
 };
 
 window.login = async function(){
   const type = document.getElementById("loginType").value;
-  const id = document.getElementById("loginId").value.trim().replaceAll("/", "-");
-  const pass = document.getElementById("loginPass").value.trim();
+  const loginValue = document.getElementById("loginId").value.trim();
+  const password = document.getElementById("loginPass").value;
 
-  if(id === "" || pass === ""){
-    alert("Please enter ID and Password.");
+  if(!loginValue || !password){
+    alert("Please enter your login details.");
     return;
   }
 
   if(type === "ano"){
-    if(id.toUpperCase() === "ANO001" && pass === "USTMNCC@Admin2026"){
-      localStorage.setItem("activeAnoId","ANO001");
+    if(loginValue.toUpperCase() === "ANO001" && password === "USTMNCC@Admin2026"){
+      localStorage.setItem("activeAnoId", "ANO001");
       window.location.href = "ano-dashboard.html";
     }else{
       alert("Invalid ANO ID or Password.");
@@ -1056,81 +1087,101 @@ window.login = async function(){
     return;
   }
 
-  const key = safeKey(id);
-
-  try{
-    const snap = await getDoc(doc(db,"cadets",key));
-
-    if(!snap.exists()){
-      alert("Cadet not registered. Please register first.");
-      return;
-    }
-
-    const cadet = snap.data();
-
-    if(cadet.status === "cancelled"){
-      alert("Your NCC enrollment has been cancelled.");
-      return;
-    }
-
-    if(cadet.password === pass){
-      localStorage.setItem("activeCadetId",cadet.id);
-      localStorage.setItem("activeCadetKey",key);
-      window.location.href = "cadet-dashboard.html";
-    }else{
-      alert("Wrong password.");
-    }
-  }catch(error){
-    alert("Login failed. Check Firestore rules.");
-    console.error(error);
+  const email = loginValue.toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    alert("Cadets must log in using the email address used during registration.");
+    return;
   }
-};
 
-onSnapshot(collection(db,"notices"), snapshot=>{
-  if(snapshot.empty) return;
-
-  let latestNotice = null;
-
-  snapshot.forEach(docSnap=>{
-    const notice = docSnap.data();
-
-    if(!notice.expiresAt || new Date(notice.expiresAt) > new Date()){
-      latestNotice = notice;
-    }
+  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    email,
+    password
   });
 
-  if(latestNotice){
-    document.getElementById("noticeTitle").innerText =
-      latestNotice.title || "Notice";
-
-    document.getElementById("noticeContent").innerText =
-      latestNotice.content || "";
-
-    document.getElementById("noticeBy").innerText =
-      "Published by: " + (latestNotice.by || "ANO") + " | " + (latestNotice.date || "");
-
-    const mediaBox = document.getElementById("noticeMediaBox");
-    mediaBox.innerHTML = "";
-
-    if(latestNotice.mediaUrl){
-      if(latestNotice.mediaType === "video"){
-        mediaBox.innerHTML = `
-          <video controls style="width:100%;max-height:420px;border-radius:14px;margin-top:15px;">
-            <source src="${latestNotice.mediaUrl}">
-          </video>
-        `;
-      }else{
-        mediaBox.innerHTML = `
-          <img src="${latestNotice.mediaUrl}" 
-               alt="Notice Photo"
-               style="width:100%;max-height:500px;object-fit:contain;border-radius:14px;margin-top:15px;">
-        `;
-      }
-    }
+  if(authError){
+    console.error("Login error:", authError);
+    alert(`Login failed: ${authError.message}`);
+    return;
   }
-});
+
+  const { data: cadet, error: profileError } = await supabase
+    .from("cadets")
+    .select("cadet_id,status")
+    .eq("user_id", authData.user.id)
+    .single();
+
+  if(profileError || !cadet){
+    console.error("Cadet profile lookup error:", profileError);
+    await supabase.auth.signOut();
+    alert("Your login account exists, but no cadet profile was found.");
+    return;
+  }
+
+  if(cadet.status === "cancelled"){
+    await supabase.auth.signOut();
+    alert("Your NCC enrollment has been cancelled.");
+    return;
+  }
+
+  if(cadet.status !== "active"){
+    await supabase.auth.signOut();
+    alert(`Your cadet account status is: ${cadet.status}.`);
+    return;
+  }
+
+  localStorage.setItem("activeCadetId", cadet.cadet_id);
+  localStorage.setItem("activeCadetUserId", authData.user.id);
+  window.location.href = "cadet-dashboard.html";
+};
+
+function showNotice(notice){
+  document.getElementById("noticeTitle").textContent = notice.title || "Notice";
+  document.getElementById("noticeContent").textContent = notice.content || "";
+
+  const created = notice.created_at ? new Date(notice.created_at).toLocaleString() : "";
+  document.getElementById("noticeBy").textContent =
+    `Published by: ${notice.published_by || "ANO"}${created ? " | " + created : ""}`;
+
+  const mediaBox = document.getElementById("noticeMediaBox");
+  mediaBox.replaceChildren();
+
+  if(!notice.media_url) return;
+
+  if(notice.media_type === "video"){
+    const video = document.createElement("video");
+    video.controls = true;
+    video.src = notice.media_url;
+    video.style.cssText = "width:100%;max-height:420px;border-radius:14px;margin-top:15px;";
+    mediaBox.appendChild(video);
+  }else{
+    const image = document.createElement("img");
+    image.src = notice.media_url;
+    image.alt = "Notice media";
+    image.style.cssText = "width:100%;max-height:500px;object-fit:contain;border-radius:14px;margin-top:15px;";
+    mediaBox.appendChild(image);
+  }
+}
+
+async function loadLatestNotice(){
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("notices")
+    .select("title,content,published_by,media_url,media_type,expires_at,created_at")
+    .or(`expires_at.is.null,expires_at.gt.${now}`)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if(error){
+    console.error("Notice loading error:", error);
+    return;
+  }
+
+  if(data) showNotice(data);
+}
 
 setRecruitmentUI();
+loadLatestNotice();
 </script>
 
 
