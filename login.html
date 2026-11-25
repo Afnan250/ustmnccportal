@@ -181,6 +181,18 @@ body{
   border-color:var(--navy);
 }
 
+.regimental-preview{
+  background:#eef2f8;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  font-weight:800;
+  color:var(--navy);
+  letter-spacing:0.6px;
+  word-break:break-all;
+}
+
 .captcha-row{
   display:flex;
   align-items:center;
@@ -320,10 +332,10 @@ body{
     </div>
 
     <div class="field">
-      <label id="loginIdLabel" for="loginIdentifier">Cadet ID or Registered Email</label>
+      <label id="loginIdLabel" for="loginIdentifier">Cadet ID / Regimental No. or Email</label>
       <div class="input-wrap">
         <i class="fa-solid fa-id-card"></i>
-        <input type="text" id="loginIdentifier" placeholder="Enter Cadet ID or Email" autocomplete="username" required>
+        <input type="text" id="loginIdentifier" placeholder="Enter Cadet ID / Regimental No. or Email" autocomplete="username" required>
       </div>
     </div>
 
@@ -350,6 +362,7 @@ body{
       </div>
     </div>
 
+    <!-- Forgot Password strictly in Login section -->
     <div class="login-meta-row">
       <button type="button" class="link-btn" onclick="openForgotPassword()">Forgot Password?</button>
     </div>
@@ -362,7 +375,7 @@ body{
   <!-- FORGOT PASSWORD SECTION (Opened from Login only) -->
   <form id="forgotPanel" class="panel" onsubmit="handleForgotPassword(event)">
     <p class="panel-note">
-      Enter the email address linked to your account to receive a password reset link.
+      Enter the email address registered with your account to receive a password reset link.
     </p>
 
     <div class="field">
@@ -388,15 +401,34 @@ body{
       <label for="regName">Full Name</label>
       <div class="input-wrap">
         <i class="fa-solid fa-user"></i>
-        <input type="text" id="regName" placeholder="Cadet Full Name" required>
+        <input type="text" id="regName" placeholder="Cadet Full Name" oninput="updateRegimentalPreview()" required>
       </div>
     </div>
 
     <div class="field">
-      <label for="regCadetId">Cadet ID</label>
+      <label for="regYear">Enrollment Year</label>
       <div class="input-wrap">
-        <i class="fa-solid fa-id-badge"></i>
-        <input type="text" id="regCadetId" placeholder="e.g. ML2024SDIA4980182CDTNAME" required>
+        <i class="fa-solid fa-calendar"></i>
+        <input type="text" id="regYear" value="2026" maxlength="4" oninput="updateRegimentalPreview()" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="regWing">Wing</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-flag"></i>
+        <select id="regWing" onchange="updateRegimentalPreview()">
+          <option value="SDIA">SDIA (Boys / Senior Division)</option>
+          <option value="SWIA">SWIA (Girls / Senior Wing)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="regUniqueNo">Cadet Unique Number</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-hashtag"></i>
+        <input type="text" id="regUniqueNo" placeholder="e.g. 4981001" oninput="updateRegimentalPreview()" required>
       </div>
     </div>
 
@@ -404,7 +436,7 @@ body{
       <label for="regRank">Rank</label>
       <div class="input-wrap">
         <i class="fa-solid fa-chevron-up"></i>
-        <select id="regRank">
+        <select id="regRank" onchange="updateRegimentalPreview()">
           <option value="CDT">CDT</option>
           <option value="LCPL">LCPL</option>
           <option value="CPL">CPL</option>
@@ -413,6 +445,11 @@ body{
           <option value="SUO">SUO</option>
         </select>
       </div>
+    </div>
+
+    <div class="field">
+      <label>Regimental Number (Auto-formatted)</label>
+      <div class="regimental-preview" id="regimentalPreview">ML2026SDIA4981001CDT</div>
     </div>
 
     <div class="field">
@@ -493,9 +530,21 @@ function cleanKey(val) {
   return String(val || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 }
 
-function normalizeId(val) {
-  return String(val || "").trim().toUpperCase().replace(/\s+/g, "");
+function buildRegimentalNumber() {
+  const year = cleanKey(document.getElementById("regYear")?.value).slice(0, 4) || "2026";
+  const wing = cleanKey(document.getElementById("regWing")?.value) || "SDIA";
+  const num = cleanKey(document.getElementById("regUniqueNo")?.value).replace(/\D/g, "") || "4981001";
+  const rank = cleanKey(document.getElementById("regRank")?.value) || "CDT";
+  const namePart = cleanKey(document.getElementById("regName")?.value);
+  return `ML${year}${wing}${num}${rank}${namePart}`;
 }
+
+window.updateRegimentalPreview = function () {
+  const preview = document.getElementById("regimentalPreview");
+  if (preview) {
+    preview.textContent = buildRegimentalNumber();
+  }
+};
 
 function generateCaptcha() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -525,6 +574,8 @@ window.switchMode = function (mode) {
 
   if (isLogin) {
     generateCaptcha();
+  } else {
+    updateRegimentalPreview();
   }
   setStatus("");
 };
@@ -541,8 +592,8 @@ window.selectLoginRole = function (role) {
     label.textContent = "ANO ID or Registered Email";
     input.placeholder = "Enter ANO001 / USTMANO001 or Email";
   } else {
-    label.textContent = "Cadet ID or Registered Email";
-    input.placeholder = "Enter Cadet ID or Email";
+    label.textContent = "Cadet ID / Regimental No. or Email";
+    input.placeholder = "Enter Cadet ID / Regimental No. or Email";
   }
   setStatus("");
 };
@@ -573,7 +624,6 @@ window.backToLoginFromReset = function () {
 async function findCadetRecord(identifier) {
   const trimmed = identifier.trim();
   const lowerEmail = trimmed.toLowerCase();
-  const upperId = normalizeId(trimmed);
   const cleanedKey = cleanKey(trimmed);
 
   if (cleanedKey) {
@@ -594,14 +644,11 @@ async function findCadetRecord(identifier) {
     }
   }
 
-  for (const candidate of [trimmed, upperId]) {
-    if (!candidate) continue;
-    const qId = query(cadetsRef, where("id", "==", candidate));
-    const snapId = await getDocs(qId);
-    if (!snapId.empty) {
-      const d = snapId.docs[0];
-      return { docId: d.id, data: d.data() };
-    }
+  const qId = query(cadetsRef, where("id", "==", trimmed));
+  const snapId = await getDocs(qId);
+  if (!snapId.empty) {
+    const d = snapId.docs[0];
+    return { docId: d.id, data: d.data() };
   }
 
   const allSnap = await getDocs(cadetsRef);
@@ -633,7 +680,7 @@ window.handleLogin = async function (event) {
   if (captchaEntered !== captchaValue) {
     generateCaptcha();
     document.getElementById("captchaInput").value = "";
-    return setStatus("Incorrect captcha code. Please type the exact code shown.");
+    return setStatus("Incorrect captcha code. Please try again.");
   }
 
   btn.disabled = true;
@@ -674,7 +721,7 @@ window.handleLogin = async function (event) {
 
       if (!anoMatched) {
         generateCaptcha();
-        return setStatus("Wrong ANO ID/email or password.");
+        return setStatus("Invalid ANO ID/email or password.");
       }
 
       localStorage.setItem("activeAnoId", "ANO001");
@@ -687,9 +734,7 @@ window.handleLogin = async function (event) {
     try {
       foundCadet = await findCadetRecord(identifier);
     } catch (dbErr) {
-      console.error("Firestore lookup error:", dbErr);
-      generateCaptcha();
-      return setStatus("Firestore read error: " + (dbErr.message || "Check Firestore rules."));
+      console.error("Cadet lookup error:", dbErr);
     }
 
     if (!foundCadet && identifier.includes("@")) {
@@ -699,11 +744,13 @@ window.handleLogin = async function (event) {
         id: fallbackKey,
         name: cred.user.displayName || identifier.split("@")[0],
         rank: "CDT",
+        wing: "SDIA",
         email: identifier.toLowerCase(),
         cadetYear: 1,
         status: "active",
         createdAt: new Date().toISOString()
-      });
+      }, { merge: true });
+
       localStorage.setItem("activeCadetId", fallbackKey);
       localStorage.setItem("activeCadetKey", fallbackKey);
       window.location.replace("cadet-dashboard.html");
@@ -712,7 +759,7 @@ window.handleLogin = async function (event) {
 
     if (!foundCadet) {
       generateCaptcha();
-      return setStatus("Cadet not found. Please register on the Register tab first.");
+      return setStatus("Cadet not found. Please register first.");
     }
 
     const cadet = foundCadet.data || {};
@@ -737,7 +784,7 @@ window.handleLogin = async function (event) {
 
     if (!authenticated) {
       generateCaptcha();
-      return setStatus("Incorrect password for this cadet account.");
+      return setStatus("Invalid Cadet ID/email or password.");
     }
 
     const activeId = cadet.id || foundCadet.docId;
@@ -749,12 +796,15 @@ window.handleLogin = async function (event) {
   } catch (err) {
     console.error("Login error:", err);
     generateCaptcha();
-    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
-      setStatus("Incorrect password. Use Forgot Password if needed.");
-    } else if (err.code === "auth/user-not-found") {
-      setStatus("No login account found. Please register first.");
+    const msg = String(err?.message || "");
+    if (msg.toLowerCase().includes("failed to fetch")) {
+      setStatus("Network connection issue while signing in. Check your internet or try again.");
+    } else if (err?.code === "auth/invalid-credential" || err?.code === "auth/wrong-password") {
+      setStatus("Invalid password. Use Forgot Password in Login if needed.");
+    } else if (err?.code === "auth/user-not-found") {
+      setStatus("Account not found. Please register first.");
     } else {
-      setStatus(err.message || "Invalid login details.");
+      setStatus("Invalid ID/email or password.");
     }
   } finally {
     btn.disabled = false;
@@ -789,35 +839,36 @@ window.handleCadetRegister = async function (event) {
   setStatus("");
 
   const name = document.getElementById("regName").value.trim();
-  const rawCadetId = document.getElementById("regCadetId").value.trim();
-  const rank = document.getElementById("regRank").value;
+  const yearVal = cleanKey(document.getElementById("regYear").value).slice(0, 4) || "2026";
+  const wing = cleanKey(document.getElementById("regWing").value) || "SDIA";
+  const uniqueNo = cleanKey(document.getElementById("regUniqueNo").value).replace(/\D/g, "");
+  const rank = cleanKey(document.getElementById("regRank").value) || "CDT";
   const phone = document.getElementById("regPhone").value.trim();
   const email = document.getElementById("regEmail").value.trim().toLowerCase();
   const password = document.getElementById("regPassword").value;
   const btn = document.getElementById("registerSubmitBtn");
 
-  const cadetDocKey = cleanKey(rawCadetId);
-  if (!name || !cadetDocKey || !phone || !email || password.length < 6) {
-    return setStatus("Please complete all fields (password must be at least 6 characters).");
-  }
+  const regimentalNo = buildRegimentalNumber();
+  const cadetDocKey = cleanKey(regimentalNo);
 
-  if (window.location.protocol === "file:") {
-    return setStatus("Please open this page via a local server (http://localhost) or GitHub Pages, not file://.");
+  if (!name || !uniqueNo || !phone || !email || password.length < 6) {
+    return setStatus("Please fill in all fields (password must be at least 6 characters).");
   }
 
   btn.disabled = true;
   try {
-    const existingSnap = await getDoc(doc(db, "cadets", cadetDocKey));
-    if (existingSnap.exists()) {
-      return setStatus("A cadet with this Cadet ID is already registered.");
-    }
+    try {
+      const existingSnap = await getDoc(doc(db, "cadets", cadetDocKey));
+      if (existingSnap.exists()) {
+        return setStatus("A cadet with this Regimental Number is already registered.");
+      }
+    } catch (_) {}
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (authErr) {
-      const msg = String(authErr?.message || "");
       const code = String(authErr?.code || "");
-      // Allow Firestore registration to proceed if email already exists or Auth endpoint is unreachable
+      const msg = String(authErr?.message || "");
       if (
         code !== "auth/email-already-in-use" &&
         code !== "auth/network-request-failed" &&
@@ -825,13 +876,15 @@ window.handleCadetRegister = async function (event) {
       ) {
         throw authErr;
       }
-      console.warn("Firebase Auth signup fallback:", code || msg);
     }
 
     await setDoc(doc(db, "cadets", cadetDocKey), {
-      id: rawCadetId,
+      id: regimentalNo,
       name,
       rank,
+      wing,
+      year: yearVal,
+      uniqueNumber: uniqueNo,
       phone,
       email,
       password,
@@ -841,20 +894,24 @@ window.handleCadetRegister = async function (event) {
     });
 
     document.getElementById("registerPanel").reset();
-    setStatus("Cadet registered successfully! You can now log in.", "success");
+    document.getElementById("regYear").value = "2026";
+    updateRegimentalPreview();
+    setStatus(`Cadet registered (${regimentalNo}). You can now log in.`, "success");
   } catch (err) {
     console.error("Register error:", err);
-    const errText = String(err?.message || "");
-    if (errText.toLowerCase().includes("failed to fetch") || err?.code === "auth/network-request-failed") {
-      setStatus("Network error (Failed to fetch): Check internet, disable ad-blocker, and run via http/https.");
+    const msg = String(err?.message || "");
+    if (msg.toLowerCase().includes("failed to fetch") || err?.code === "auth/network-request-failed") {
+      setStatus("Network error while registering. Please check your connection and try again.");
     } else {
-      setStatus(errText || "Cadet registration failed.");
+      setStatus(msg || "Cadet registration failed.");
     }
   } finally {
     btn.disabled = false;
   }
 };
+
 generateCaptcha();
+updateRegimentalPreview();
 </script>
 </body>
 </html>
