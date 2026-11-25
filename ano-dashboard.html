@@ -565,9 +565,9 @@ footer strong{
         </tr>
       </thead>
 
-      <tbody id="cadetTable">
+    <tbody id="cadetTable">
         <tr>
-          <td colspan="8">Loading cadets...</td>
+          <td colspan="8">No cadets registered yet.</td>
         </tr>
       </tbody>
     </table>
@@ -1115,65 +1115,94 @@ window.downloadAlumniPDF = function(){
   downloadPDF("USTM_NCC_Alumni_Requests.pdf", rows, "USTM NCC Alumni Requests");
 };
 
-function loadCadets(){
-  onSnapshot(collection(db,"cadets"), snapshot=>{
-    const tbody = document.getElementById("cadetTable");
+function loadCadets() {
+  const tbody = document.getElementById("cadetTable");
+  if (tbody) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8">No cadets registered yet.</td>
+      </tr>
+    `;
+  }
 
-    if(snapshot.empty){
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="8">No cadets registered yet.</td>
-        </tr>
-      `;
-      return;
+  onSnapshot(
+    collection(db, "cadets"),
+    (snapshot) => {
+      const tableBody = document.getElementById("cadetTable");
+      if (!tableBody) return;
+
+      if (snapshot.empty) {
+        allCadetRows = [];
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="8">No cadets registered yet.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      allCadetRows = [];
+      tableBody.innerHTML = "";
+
+      snapshot.forEach((docSnap) => {
+        const cadet = docSnap.data() || {};
+        const docId = docSnap.id;
+        const rank = cadet.rank || "CDT";
+        const wing = cadet.wing || "Army";
+        const status = cadet.status || "active";
+
+        const tr = document.createElement("tr");
+        tr.setAttribute(
+          "data-search",
+          `${cadet.id || ""} ${cadet.name || ""} ${rank} ${wing} ${status}`.toLowerCase()
+        );
+
+        tr.innerHTML = `
+          <td>${cadet.id || docId}</td>
+          <td>${cadet.name || "Not registered"}</td>
+          <td>${rank}</td>
+          <td>${wing}</td>
+          <td>${yearText(cadet.cadetYear)}</td>
+          <td>${status}</td>
+          <td>
+            <select class="rank-select" id="rank_${docId}">
+              <option value="CDT" ${rank === "CDT" ? "selected" : ""}>CDT</option>
+              <option value="LCPL" ${rank === "LCPL" ? "selected" : ""}>LCPL</option>
+              <option value="CPL" ${rank === "CPL" ? "selected" : ""}>CPL</option>
+              <option value="SGT" ${rank === "SGT" ? "selected" : ""}>SGT</option>
+              <option value="JUO" ${rank === "JUO" ? "selected" : ""}>JUO</option>
+              <option value="SUO" ${rank === "SUO" ? "selected" : ""}>SUO</option>
+            </select>
+            <button class="small-btn success" onclick="updateCadetRank('${docId}')">Update Rank</button>
+          </td>
+          <td>
+            <button class="small-btn success" onclick="markCadetYear('${docId}',1)">1st</button>
+            <button class="small-btn success" onclick="markCadetYear('${docId}',2)">2nd</button>
+            <button class="small-btn success" onclick="markCadetYear('${docId}',3)">3rd</button>
+            <button class="small-btn danger" onclick="markAlumni('${docId}')">Alumni</button>
+            <button class="small-btn danger delete-cadet-btn" onclick="deleteCadet('${docId}')">
+              Delete
+            </button>
+          </td>
+        `;
+
+        tableBody.appendChild(tr);
+        allCadetRows.push(tr);
+      });
+    },
+    (error) => {
+      console.error("Error loading cadets:", error);
+      const tableBody = document.getElementById("cadetTable");
+      if (tableBody) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="8">No cadets registered yet.</td>
+          </tr>
+        `;
+      }
     }
-
-    allCadetRows = [];
-    tbody.innerHTML = "";
-
-    snapshot.forEach(docSnap=>{
-      const cadet = docSnap.data();
-      const docId = docSnap.id;
-      const rank = cadet.rank || "CDT";
-
-      const tr = document.createElement("tr");
-      tr.setAttribute("data-search", `${cadet.id || ""} ${cadet.name || ""} ${rank} ${cadet.wing || ""} ${cadet.status || ""}`.toLowerCase());
-
-      tr.innerHTML = `
-        <td>${cadet.id || ""}</td>
-        <td>${cadet.name || ""}</td>
-        <td>${rank}</td>
-        <td>${cadet.wing || ""}</td>
-        <td>${yearText(cadet.cadetYear)}</td>
-        <td>${cadet.status || "active"}</td>
-        <td>
-          <select class="rank-select" id="rank_${docId}">
-            <option value="CDT" ${rank === "CDT" ? "selected" : ""}>CDT</option>
-            <option value="LCPL" ${rank === "LCPL" ? "selected" : ""}>LCPL</option>
-            <option value="CPL" ${rank === "CPL" ? "selected" : ""}>CPL</option>
-            <option value="SGT" ${rank === "SGT" ? "selected" : ""}>SGT</option>
-            <option value="JUO" ${rank === "JUO" ? "selected" : ""}>JUO</option>
-            <option value="SUO" ${rank === "SUO" ? "selected" : ""}>SUO</option>
-          </select>
-          <button class="small-btn success" onclick="updateCadetRank('${docId}')">Update Rank</button>
-        </td>
-        <td>
-          <button class="small-btn success" onclick="markCadetYear('${docId}',1)">1st</button>
-          <button class="small-btn success" onclick="markCadetYear('${docId}',2)">2nd</button>
-          <button class="small-btn success" onclick="markCadetYear('${docId}',3)">3rd</button>
-          <button class="small-btn danger" onclick="markAlumni('${docId}')">Alumni</button>
-          <button class="small-btn danger delete-cadet-btn" onclick="deleteCadet('${docId}')">
-            Delete
-          </button>
-        </td>
-      `;
-
-      tbody.appendChild(tr);
-      allCadetRows.push(tr);
-    });
-  });
+  );
 }
-
 window.filterCadetTable = function(){
   const value = document.getElementById("cadetSearch").value.toLowerCase().trim();
 
