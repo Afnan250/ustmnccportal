@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>USTM NCC Portal | Login &amp; Registration</title>
+<title>USTM NCC Portal | Login &amp; Register</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
@@ -11,7 +11,6 @@
   --navy-2:#08275d;
   --saffron:#ff9933;
   --green:#138808;
-  --light:#f4f7fc;
   --danger:#c62828;
   --border:#cfd6e2;
 }
@@ -35,10 +34,9 @@ body{
 }
 
 .back-link{
-  align-self:flex-start;
   max-width:460px;
   width:100%;
-  margin:0 auto 14px;
+  margin-bottom:14px;
   color:#fff;
   text-decoration:none;
   font-weight:700;
@@ -100,19 +98,16 @@ body{
 .mode-tabs,
 .role-tabs{
   display:grid;
+  grid-template-columns:1fr 1fr;
   gap:10px;
   margin-bottom:16px;
 }
 
-.mode-tabs{
-  grid-template-columns:1fr 1fr;
-}
-
 .role-tabs{
-  grid-template-columns:1fr 1fr;
   background:#eef2f8;
   padding:5px;
   border-radius:12px;
+  gap:6px;
 }
 
 .mode-tabs button{
@@ -232,10 +227,6 @@ body{
   text-decoration:underline;
 }
 
-.link-btn:hover{
-  color:var(--navy);
-}
-
 .submit-btn{
   width:100%;
   padding:13px;
@@ -316,13 +307,12 @@ body{
     <p>42 MEGH BN NCC | Cadet &amp; ANO Access</p>
   </div>
 
-  <!-- Top Tabs: Login vs Register -->
   <div class="mode-tabs">
     <button type="button" id="tabLogin" class="active" onclick="switchMode('login')">Login</button>
     <button type="button" id="tabRegister" onclick="switchMode('register')">Register</button>
   </div>
 
-  <!-- LOGIN PANEL (Forgot Password lives ONLY inside Login) -->
+  <!-- LOGIN SECTION (Forgot Password ONLY here) -->
   <form id="loginPanel" class="panel active" onsubmit="handleLogin(event)">
     <div class="role-tabs">
       <button type="button" id="roleCadet" class="active" onclick="selectLoginRole('cadet')">Cadet Login</button>
@@ -360,7 +350,6 @@ body{
       </div>
     </div>
 
-    <!-- Forgot Password strictly in Login section -->
     <div class="login-meta-row">
       <button type="button" class="link-btn" onclick="openForgotPassword()">Forgot Password?</button>
     </div>
@@ -370,7 +359,7 @@ body{
     </button>
   </form>
 
-  <!-- FORGOT PASSWORD PANEL (Accessed from Login only) -->
+  <!-- FORGOT PASSWORD SECTION (Opened from Login only) -->
   <form id="forgotPanel" class="panel" onsubmit="handleForgotPassword(event)">
     <p class="panel-note">
       Enter the email address linked to your account to receive a password reset link.
@@ -393,7 +382,7 @@ body{
     </button>
   </form>
 
-  <!-- REGISTER PANEL (Cadet registration only; NO Forgot Password here) -->
+  <!-- REGISTER SECTION (No Forgot Password here) -->
   <form id="registerPanel" class="panel" onsubmit="handleCadetRegister(event)">
     <div class="field">
       <label for="regName">Full Name</label>
@@ -587,55 +576,43 @@ async function findCadetRecord(identifier) {
   const upperId = normalizeId(trimmed);
   const cleanedKey = cleanKey(trimmed);
 
-  // 1. Direct lookup by cleaned alphanumeric ID
   if (cleanedKey) {
-    try {
-      const directSnap = await getDoc(doc(db, "cadets", cleanedKey));
-      if (directSnap.exists()) {
-        return { docId: directSnap.id, data: directSnap.data() };
-      }
-    } catch (_) {}
+    const directSnap = await getDoc(doc(db, "cadets", cleanedKey));
+    if (directSnap.exists()) {
+      return { docId: directSnap.id, data: directSnap.data() };
+    }
   }
 
   const cadetsRef = collection(db, "cadets");
 
-  // 2. Lookup by email
   if (trimmed.includes("@")) {
-    try {
-      const qEmail = query(cadetsRef, where("email", "==", lowerEmail));
-      const snapEmail = await getDocs(qEmail);
-      if (!snapEmail.empty) {
-        const d = snapEmail.docs[0];
-        return { docId: d.id, data: d.data() };
-      }
-    } catch (_) {}
+    const qEmail = query(cadetsRef, where("email", "==", lowerEmail));
+    const snapEmail = await getDocs(qEmail);
+    if (!snapEmail.empty) {
+      const d = snapEmail.docs[0];
+      return { docId: d.id, data: d.data() };
+    }
   }
 
-  // 3. Lookup by exact or normalized ID
   for (const candidate of [trimmed, upperId]) {
     if (!candidate) continue;
-    try {
-      const qId = query(cadetsRef, where("id", "==", candidate));
-      const snapId = await getDocs(qId);
-      if (!snapId.empty) {
-        const d = snapId.docs[0];
-        return { docId: d.id, data: d.data() };
-      }
-    } catch (_) {}
+    const qId = query(cadetsRef, where("id", "==", candidate));
+    const snapId = await getDocs(qId);
+    if (!snapId.empty) {
+      const d = snapId.docs[0];
+      return { docId: d.id, data: d.data() };
+    }
   }
 
-  // 4. Fallback scan if IDs were saved with different slash/case formatting
-  try {
-    const allSnap = await getDocs(cadetsRef);
-    for (const d of allSnap.docs) {
-      const row = d.data() || {};
-      const rowKey = cleanKey(row.id || d.id);
-      const rowEmail = String(row.email || "").trim().toLowerCase();
-      if ((cleanedKey && rowKey === cleanedKey) || (trimmed.includes("@") && rowEmail === lowerEmail)) {
-        return { docId: d.id, data: row };
-      }
+  const allSnap = await getDocs(cadetsRef);
+  for (const d of allSnap.docs) {
+    const row = d.data() || {};
+    const rowKey = cleanKey(row.id || d.id);
+    const rowEmail = String(row.email || "").trim().toLowerCase();
+    if ((cleanedKey && rowKey === cleanedKey) || (trimmed.includes("@") && rowEmail === lowerEmail)) {
+      return { docId: d.id, data: row };
     }
-  } catch (_) {}
+  }
 
   return null;
 }
@@ -656,7 +633,7 @@ window.handleLogin = async function (event) {
   if (captchaEntered !== captchaValue) {
     generateCaptcha();
     document.getElementById("captchaInput").value = "";
-    return setStatus("Incorrect captcha. Please try again.");
+    return setStatus("Incorrect captcha code. Please type the exact code shown.");
   }
 
   btn.disabled = true;
@@ -667,7 +644,6 @@ window.handleLogin = async function (event) {
       const isDefaultAnoId = normalizedAno === "ANO001" || normalizedAno === "USTMANO001";
       let anoMatched = false;
 
-      // Check Firestore anoAdmins if present
       for (const anoDocId of [normalizedAno, "ANO001", "USTMANO001"]) {
         if (!anoDocId) continue;
         try {
@@ -687,20 +663,18 @@ window.handleLogin = async function (event) {
         } catch (_) {}
       }
 
-      // Check Firebase Auth directly if email was entered
       if (!anoMatched && identifier.includes("@")) {
         await signInWithEmailAndPassword(auth, identifier.toLowerCase(), password);
         anoMatched = true;
       }
 
-      // Default ANO credentials check
       if (!anoMatched && isDefaultAnoId && password === "USTMNCC@Admin") {
         anoMatched = true;
       }
 
       if (!anoMatched) {
         generateCaptcha();
-        return setStatus("Invalid ANO ID/email or password.");
+        return setStatus("Wrong ANO ID/email or password.");
       }
 
       localStorage.setItem("activeAnoId", "ANO001");
@@ -708,11 +682,37 @@ window.handleLogin = async function (event) {
       return;
     }
 
-    // Cadet Login
-    const foundCadet = await findCadetRecord(identifier);
+    // CADET LOGIN
+    let foundCadet = null;
+    try {
+      foundCadet = await findCadetRecord(identifier);
+    } catch (dbErr) {
+      console.error("Firestore lookup error:", dbErr);
+      generateCaptcha();
+      return setStatus("Firestore read error: " + (dbErr.message || "Check Firestore rules."));
+    }
+
+    if (!foundCadet && identifier.includes("@")) {
+      const cred = await signInWithEmailAndPassword(auth, identifier.toLowerCase(), password);
+      const fallbackKey = cleanKey(cred.user.uid);
+      await setDoc(doc(db, "cadets", fallbackKey), {
+        id: fallbackKey,
+        name: cred.user.displayName || identifier.split("@")[0],
+        rank: "CDT",
+        email: identifier.toLowerCase(),
+        cadetYear: 1,
+        status: "active",
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem("activeCadetId", fallbackKey);
+      localStorage.setItem("activeCadetKey", fallbackKey);
+      window.location.replace("cadet-dashboard.html");
+      return;
+    }
+
     if (!foundCadet) {
       generateCaptcha();
-      return setStatus("Invalid Cadet ID/email or password.");
+      return setStatus("Cadet not found. Please register on the Register tab first.");
     }
 
     const cadet = foundCadet.data || {};
@@ -723,26 +723,25 @@ window.handleLogin = async function (event) {
 
     let authenticated = false;
 
-    if (cadet.email) {
-      try {
-        await signInWithEmailAndPassword(auth, String(cadet.email).trim().toLowerCase(), password);
-        authenticated = true;
-      } catch (_) {
-        if (cadet.password && cadet.password === password) {
-          authenticated = true;
-        }
+    if (cadet.password && cadet.password === password) {
+      authenticated = true;
+      if (cadet.email) {
+        try {
+          await signInWithEmailAndPassword(auth, String(cadet.email).trim().toLowerCase(), password);
+        } catch (_) {}
       }
-    } else if (cadet.password && cadet.password === password) {
+    } else if (cadet.email) {
+      await signInWithEmailAndPassword(auth, String(cadet.email).trim().toLowerCase(), password);
       authenticated = true;
     }
 
     if (!authenticated) {
       generateCaptcha();
-      return setStatus("Invalid Cadet ID/email or password.");
+      return setStatus("Incorrect password for this cadet account.");
     }
 
     const activeId = cadet.id || foundCadet.docId;
-    const activeKey = cleanKey(activeId) || foundCadet.docId;
+    const activeKey = foundCadet.docId || cleanKey(activeId);
 
     localStorage.setItem("activeCadetId", activeId);
     localStorage.setItem("activeCadetKey", activeKey);
@@ -750,7 +749,13 @@ window.handleLogin = async function (event) {
   } catch (err) {
     console.error("Login error:", err);
     generateCaptcha();
-    setStatus("Invalid ID/email or password.");
+    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
+      setStatus("Incorrect password. Use Forgot Password if needed.");
+    } else if (err.code === "auth/user-not-found") {
+      setStatus("No login account found. Please register first.");
+    } else {
+      setStatus(err.message || "Invalid login details.");
+    }
   } finally {
     btn.disabled = false;
   }
