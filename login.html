@@ -495,12 +495,17 @@ let captchaValue = "";
 
 function setStatus(msg, type = "error") {
   const el = document.getElementById("statusMsg");
+  if (!el) return;
   el.textContent = msg || "";
   el.className = msg ? (type === "success" ? "msg-success" : "msg-error") : "";
 }
 
 function cleanKey(val) {
   return String(val || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function normalizeId(val) {
+  return String(val || "").trim().toUpperCase().replace(/\s+/g, "");
 }
 
 function generateCaptcha() {
@@ -516,7 +521,8 @@ function generateCaptcha() {
 
 window.refreshCaptcha = function () {
   generateCaptcha();
-  document.getElementById("captchaInput").value = "";
+  const input = document.getElementById("captchaInput");
+  if (input) input.value = "";
 };
 
 window.switchMode = function (mode) {
@@ -577,31 +583,59 @@ window.backToLoginFromReset = function () {
 
 async function findCadetRecord(identifier) {
   const trimmed = identifier.trim();
-  const normalizedKey = cleanKey(trimmed);
+  const lowerEmail = trimmed.toLowerCase();
+  const upperId = normalizeId(trimmed);
+  const cleanedKey = cleanKey(trimmed);
 
-  // 1. Direct doc lookup by cleaned ID
-  if (normalizedKey) {
-    const directSnap = await getDoc(doc(db, "cadets", normalizedKey));
-    if (directSnap.exists()) {
-      return { docId: directSnap.id, data: directSnap.data() };
-    }
+  // 1. Direct lookup by cleaned alphanumeric ID
+  if (cleanedKey) {
+    try {
+      const directSnap = await getDoc(doc(db, "cadets", cleanedKey));
+      if (directSnap.exists()) {
+        return { docId: directSnap.id, data: directSnap.data() };
+      }
+    } catch (_) {}
   }
 
-  // 2. Query by email or id field
   const cadetsRef = collection(db, "cadets");
-  const qByEmail = query(cadetsRef, where("email", "==", trimmed.toLowerCase()));
-  const emailSnap = await getDocs(qByEmail);
-  if (!emailSnap.empty) {
-    const first = emailSnap.docs[0];
-    return { docId: first.id, data: first.data() };
+
+  // 2. Lookup by email
+  if (trimmed.includes("@")) {
+    try {
+      const qEmail = query(cadetsRef, where("email", "==", lowerEmail));
+      const snapEmail = await getDocs(qEmail);
+      if (!snapEmail.empty) {
+        const d = snapEmail.docs[0];
+        return { docId: d.id, data: d.data() };
+      }
+    } catch (_) {}
   }
 
-  const qById = query(cadetsRef, where("id", "==", trimmed));
-  const idSnap = await getDocs(qById);
-  if (!idSnap.empty) {
-    const first = idSnap.docs[0];
-    return { docId: first.id, data: first.data() };
+  // 3. Lookup by exact or normalized ID
+  for (const candidate of [trimmed, upperId]) {
+    if (!candidate) continue;
+    try {
+      const qId = query(cadetsRef, where("id", "==", candidate));
+      const snapId = await getDocs(qId);
+      if (!snapId.empty) {
+        const d = snapId.docs[0];
+        return { docId: d.id, data: d.data() };
+      }
+    } catch (_) {}
   }
+
+  // 4. Fallback scan if IDs were saved with different slash/case formatting
+  try {
+    const allSnap = await getDocs(cadetsRef);
+    for (const d of allSnap.docs) {
+      const row = d.data() || {};
+      const rowKey = cleanKey(row.id || d.id);
+      const rowEmail = String(row.email || "").trim().toLowerCase();
+      if ((cleanedKey && rowKey === cleanedKey) || (trimmed.includes("@") && rowEmail === lowerEmail)) {
+        return { docId: d.id, data: row };
+      }
+    }
+  } catch (_) {}
 
   return null;
 }
@@ -630,31 +664,37 @@ window.handleLogin = async function (event) {
   try {
     if (loginRole === "ano") {
       const normalizedAno = cleanKey(identifier);
-      const isAnoId = normalizedAno === "ANO001" || normalizedAno === "USTMANO001";
-
-      // Check Firestore anoAdmins collection if present
+      const isDefaultAnoId = normalizedAno === "ANO001" || normalizedAno === "USTMANO001";
       let anoMatched = false;
-      try {
-        const anoSnap = await getDoc(doc(db, "anoAdmins", normalizedAno || "ANO001"));
-        if (anoSnap.exists()) {
-          const anoData = anoSnap.data();
-          if (anoData.email) {
-            await signInWithEmailAndPassword(auth, anoData.email, password);
-            anoMatched = true;
-          } else if (anoData.password && anoData.password === password) {
-            anoMatched = true;
+
+      // Check Firestore anoAdmins if present
+      for (const anoDocId of [normalizedAno, "ANO001", "USTMANO001"]) {
+        if (!anoDocId) continue;
+        try {
+          const anoSnap = await getDoc(doc(db, "anoAdmins", anoDocId));
+          if (anoSnap.exists()) {
+            const anoData = anoSnap.data() || {};
+            if (anoData.email) {
+              await signInWithEmailAndPassword(auth, anoData.email.trim().toLowerCase(), password);
+              anoMatched = true;
+              break;
+            }
+            if (anoData.password && anoData.password === password) {
+              anoMatched = true;
+              break;
+            }
           }
-        }
-      } catch (_) {
-        // Fallback if anoAdmins collection does not exist yet
+        } catch (_) {}
       }
 
+      // Check Firebase Auth directly if email was entered
       if (!anoMatched && identifier.includes("@")) {
-        await signInWithEmailAndPassword(auth, identifier, password);
+        await signInWithEmailAndPassword(auth, identifier.toLowerCase(), password);
         anoMatched = true;
       }
 
-      if (!anoMatched && isAnoId && password === "USTMNCC@Admin") {
+      // Default ANO credentials check
+      if (!anoMatched && isDefaultAnoId && password === "USTMNCC@Admin") {
         anoMatched = true;
       }
 
@@ -663,36 +703,34 @@ window.handleLogin = async function (event) {
         return setStatus("Invalid ANO ID/email or password.");
       }
 
-      // ano-dashboard.html checks activeAnoId === "ANO001"
       localStorage.setItem("activeAnoId", "ANO001");
       window.location.replace("ano-dashboard.html");
       return;
     }
 
-    // Cadet Login flow
+    // Cadet Login
     const foundCadet = await findCadetRecord(identifier);
     if (!foundCadet) {
       generateCaptcha();
-      return setStatus("Cadet account not found. Please register first.");
+      return setStatus("Invalid Cadet ID/email or password.");
     }
 
-    const cadet = foundCadet.data;
+    const cadet = foundCadet.data || {};
     if (String(cadet.status || "").toLowerCase() === "cancelled") {
       generateCaptcha();
       return setStatus("Your NCC enrollment has been cancelled.");
     }
 
     let authenticated = false;
+
     if (cadet.email) {
       try {
-        await signInWithEmailAndPassword(auth, cadet.email, password);
+        await signInWithEmailAndPassword(auth, String(cadet.email).trim().toLowerCase(), password);
         authenticated = true;
-      } catch (authErr) {
-        if (!cadet.password || cadet.password !== password) {
-          generateCaptcha();
-          return setStatus("Invalid email or password.");
+      } catch (_) {
+        if (cadet.password && cadet.password === password) {
+          authenticated = true;
         }
-        authenticated = true;
       }
     } else if (cadet.password && cadet.password === password) {
       authenticated = true;
@@ -700,7 +738,7 @@ window.handleLogin = async function (event) {
 
     if (!authenticated) {
       generateCaptcha();
-      return setStatus("Invalid credentials.");
+      return setStatus("Invalid Cadet ID/email or password.");
     }
 
     const activeId = cadet.id || foundCadet.docId;
@@ -712,7 +750,7 @@ window.handleLogin = async function (event) {
   } catch (err) {
     console.error("Login error:", err);
     generateCaptcha();
-    setStatus(err.message || "Unable to log in right now.");
+    setStatus("Invalid ID/email or password.");
   } finally {
     btn.disabled = false;
   }
