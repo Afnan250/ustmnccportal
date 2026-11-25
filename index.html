@@ -393,7 +393,6 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
   }
 }
 
-
 /* Regimental-number registration */
 .registration-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .registration-grid input,.registration-grid select{width:100%;box-sizing:border-box}
@@ -403,14 +402,13 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
 .regimental-preview strong{display:block;font-size:1.05rem;overflow-wrap:anywhere;color:#f2b24a;letter-spacing:.03em}
 .regimental-preview span{display:block;font-size:.78rem;opacity:.72;margin-top:6px}
 @media(max-width:650px){.registration-grid{grid-template-columns:1fr}.registration-grid .full-row,.regimental-preview{grid-column:auto}}
-
 </style>
 </head>
 
 <body>
 
 <div class="top-bar">
-  <p><i class="fa-solid fa-location-dot"></i> University of Science & Technology Meghalaya</p>
+  <p><i class="fa-solid fa-location-dot"></i> University of Science &amp; Technology Meghalaya</p>
   <p><i class="fa-solid fa-shield-halved"></i> 42 MEGH BN NCC</p>
 </div>
 
@@ -471,13 +469,13 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
       <p>Learn about the Associate NCC Officers guiding USTM NCC through leadership, discipline and service.</p>
     </div>
 
-  <div class="card" onclick="openAlumniChoicePopup()" style="cursor:pointer;">
-  <i class="fa-solid fa-user-graduate"></i>
-  <h3>Alumni Cadets</h3>
-  <p>
-    View the legacy of former USTM NCC cadets and their journey of discipline, service and leadership.
-  </p>
-</div>
+    <div class="card" onclick="openAlumniChoicePopup()" style="cursor:pointer;">
+      <i class="fa-solid fa-user-graduate"></i>
+      <h3>Alumni Cadets</h3>
+      <p>
+        View the legacy of former USTM NCC cadets and their journey of discipline, service and leadership.
+      </p>
+    </div>
 
     <div class="card join-card" id="joinCard" onclick="openJoinPopup()">
       <i class="fa-solid fa-user-plus"></i>
@@ -487,7 +485,7 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
 
     <div class="card audio-card" onclick="openAudioPopup()">
       <i class="fa-solid fa-headphones"></i>
-      <h3>NCC Heritage & Music Library</h3>
+      <h3>NCC Heritage &amp; Music Library</h3>
       <p>Listen, download and learn the history of NCC and patriotic songs.</p>
     </div>
   </div>
@@ -565,9 +563,12 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
           <option value="cadet">Cadet Login</option>
           <option value="ano">ANO Admin Login</option>
         </select>
-        <input type="text" id="loginId" placeholder="Enter Regimental Number">
+        <input type="text" id="loginId" placeholder="Enter Regimental Number or Email">
         <input type="password" id="loginPass" placeholder="Enter Password">
-      <button type="button" class="btn login-main-btn" onclick="login()">Login</button>
+        <div style="text-align:right;margin:4px 0 8px;">
+          <button type="button" class="switch-link" style="font-size:14px;text-decoration:underline;" onclick="forgotPasswordFromLogin()">Forgot Password?</button>
+        </div>
+        <button type="button" class="btn login-main-btn" onclick="login()">Login</button>
         <p class="switch-text">
           Cadet not registered?
           <button type="button" class="switch-link" onclick="flipToRegister()">Register here</button>
@@ -600,7 +601,7 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
             <span>Generated automatically. No hyphens, slashes or spaces.</span>
           </div>
         </div>
-        <button class="btn login-main-btn" onclick="registerCadet()">Register Cadet</button>
+        <button type="button" class="btn login-main-btn" onclick="registerCadet()">Register Cadet</button>
         <p class="switch-text">
           Already registered?
           <button type="button" class="switch-link" onclick="flipToLogin()">Login here</button>
@@ -612,7 +613,7 @@ footer{background:#071a3d;color:white;text-align:center;padding:25px}
 
 <footer>
 © 2026 USTM NCC | 42 MEGH BN NCC
-Developed & Maintained by USTM NCC
+Developed &amp; Maintained by USTM NCC
 </footer>
 
 <div class="join-popup" id="joinPopup">
@@ -713,7 +714,7 @@ Developed & Maintained by USTM NCC
         <h3 style="margin-top:14px;color:#071a3d;">Lt. Syed Rizaul Karim Ahmed</h3>
         <p style="font-weight:800;color:#d35400;margin:6px 0;">Associate NCC Officer</p>
         <p style="color:#555;line-height:1.7;">
-         **Lt. Syed Rizaul Karim Ahmed** is the Associate NCC Officer (ANO) of USTM NCC under 42 Meghalaya Battalion NCC and an Assistant Professor in the Department of Zoology at USTM. A dedicated educator and mentor, he guides cadets in developing discipline, leadership, responsibility, and a spirit of national service. Through his commitment to the values of the National Cadet Corps, he inspires young cadets to uphold the NCC motto, **"Unity and Discipline,"** and strive for excellence in all aspects of life.
+          <strong>Lt. Syed Rizaul Karim Ahmed</strong> is the Associate NCC Officer (ANO) of USTM NCC under 42 Meghalaya Battalion NCC and an Assistant Professor in the Department of Zoology at USTM. A dedicated educator and mentor, he guides cadets in developing discipline, leadership, responsibility, and a spirit of national service. Through his commitment to the values of the National Cadet Corps, he inspires young cadets to uphold the NCC motto, <strong>"Unity and Discipline,"</strong> and strive for excellence in all aspects of life.
         </p>
       </div>
 
@@ -724,7 +725,7 @@ Developed & Maintained by USTM NCC
         <h3 style="margin-top:14px;color:#071a3d;">Lt. Dr. Fahmida S. Bora</h3>
         <p style="font-weight:800;color:#d35400;margin:6px 0;">Associate NCC Officer</p>
         <p style="color:#555;line-height:1.7;">
-         **Lt. Dr. Fahmida S. Bora** is the Associate NCC Officer (ANO) of USTM NCC under 42 Meghalaya Battalion NCC and an Assistant Professor in the Department of Political Science at USTM. Known for her dedication to youth development and leadership training, she actively motivates cadets to become confident, socially responsible, and service-oriented citizens. Her guidance helps cadets cultivate critical thinking, teamwork, and a strong sense of duty towards the nation, reflecting the true spirit of the National Cadet Corps.
+          <strong>Lt. Dr. Fahmida S. Bora</strong> is the Associate NCC Officer (ANO) of USTM NCC under 42 Meghalaya Battalion NCC and an Assistant Professor in the Department of Political Science at USTM. Known for her dedication to youth development and leadership training, she actively motivates cadets to become confident, socially responsible, and service-oriented citizens. Her guidance helps cadets cultivate critical thinking, teamwork, and a strong sense of duty towards the nation, reflecting the true spirit of the National Cadet Corps.
         </p>
       </div>
 
@@ -747,14 +748,13 @@ Developed & Maintained by USTM NCC
         No, Continue as Visitor
       </button>
     </div>
-
   </div>
 </div>
 
 <div class="audio-popup" id="audioPopup">
   <div class="popup-box">
     <button class="close-btn" onclick="closeAudioPopup()">×</button>
-    <h2>NCC Heritage & Music Library</h2>
+    <h2>NCC Heritage &amp; Music Library</h2>
 
     <div class="tabs">
       <button onclick="showAudio(event,'anthem')" class="tab-btn active">NATIONAL ANTHEM</button>
@@ -773,7 +773,7 @@ Developed & Maintained by USTM NCC
 
       <div class="info-tabs">
         <button class="info-tab-btn active-info" onclick="showInfo(event,'anthemLyrics')">Lyrics</button>
-        <button class="info-tab-btn" onclick="showInfo(event,'anthemHistory')">History & Significance</button>
+        <button class="info-tab-btn" onclick="showInfo(event,'anthemHistory')">History &amp; Significance</button>
       </div>
 
       <div class="info-box" id="anthemLyrics">
@@ -795,7 +795,7 @@ Jay Jay Jay Jay He.</p>
       </div>
 
       <div class="info-box" id="anthemHistory" style="display:none;">
-        <h4>History & Significance</h4>
+        <h4>History &amp; Significance</h4>
         <p>Jana Gana Mana was written by Rabindranath Tagore in 1911 and adopted as the National Anthem of India on 24 January 1950. In NCC, it is played during official functions, parades and ceremonies to show respect towards the nation.</p>
       </div>
     </div>
@@ -897,23 +897,49 @@ But the Quartermaster of Badluram’s company didn’t remove Badluram’s name 
 </div>
 
 <script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  addDoc,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const SUPABASE_URL = "https://yrtzeqrwhdisqtlesrrz.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_hAn0YXokHG80Qn9TBvjxKQ_e5ZWh0lK";
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const firebaseConfig = {
+  apiKey: "AIzaSyDQZMu4v6XebenpS2cG2NwYN3RYKS6NWUs",
+  authDomain: "ustm-ncc-portal.firebaseapp.com",
+  projectId: "ustm-ncc-portal",
+  storageBucket: "ustm-ncc-portal.appspot.com",
+  messagingSenderId: "164517585348",
+  appId: "1:164517585348:web:119a2abdb1d871226ec491"
+};
 
-function normalizePart(value){
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+function normalizePart(value) {
   return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 }
 
-function wingFromGender(gender){
-  if(gender === "male") return "SDIA";
-  if(gender === "female") return "SWIA";
+function wingFromGender(gender) {
+  if (gender === "male") return "SDIA";
+  if (gender === "female") return "SWIA";
   return "";
 }
 
-function buildRegimentalNumber(){
+function buildRegimentalNumber() {
   const year = normalizePart(document.getElementById("registerYear")?.value);
   const gender = document.getElementById("registerGender")?.value || "";
   const wing = wingFromGender(gender);
@@ -923,195 +949,314 @@ function buildRegimentalNumber(){
   return `ML${year || "YEAR"}${wing || "WING"}${number || "NUMBER"}${rank || "RANK"}${name || "NAME"}`;
 }
 
-function authEmailFromRegimentalNumber(regimentalNumber){
-  return `${regimentalNumber.toLowerCase()}@cadets.ustmnccportal.com`;
+function authEmailFromRegimentalNumber(regimentalNumber) {
+  return `${normalizePart(regimentalNumber).toLowerCase()}@cadets.ustmnccportal.com`;
 }
 
-function updateRegimentalPreview(){
+function updateRegimentalPreview() {
   const preview = document.getElementById("regimentalPreview");
-  if(preview) preview.textContent = buildRegimentalNumber();
+  if (preview) preview.textContent = buildRegimentalNumber();
 }
 
-function isRecruitmentOpen(){
+function isRecruitmentOpen() {
   const month = new Date().getMonth() + 1;
   return month >= 7 && month <= 10;
 }
 
-function setRecruitmentUI(){
+function setRecruitmentUI() {
   const month = new Date().getMonth() + 1;
   const joinCard = document.getElementById("joinCard");
-  if(month >= 5 && month <= 6){
+  if (month >= 5 && month <= 6) {
     const marquee = document.getElementById("recruitmentMarquee");
-    if(marquee) marquee.style.display = "block";
+    if (marquee) marquee.style.display = "block";
   }
-  if(!joinCard) return;
-  joinCard.innerHTML = isRecruitmentOpen() ? `
-    <i class="fa-solid fa-user-plus"></i><h3>Join USTM NCC</h3>
-    <p>NCC enrollment is open from July to October. Click here to submit your application.</p>` : `
-    <i class="fa-solid fa-lock"></i><h3>NCC Recruitment Closed</h3>
-    <p>Recruitment opens every year from July to October. Please try again in the next enrollment cycle. Jai Hind.</p>`;
+  if (!joinCard) return;
+  joinCard.innerHTML = isRecruitmentOpen()
+    ? `<i class="fa-solid fa-user-plus"></i><h3>Join USTM NCC</h3>
+       <p>NCC enrollment is open from July to October. Click here to submit your application.</p>`
+    : `<i class="fa-solid fa-lock"></i><h3>NCC Recruitment Closed</h3>
+       <p>Recruitment opens every year from July to October. Please try again in the next enrollment cycle. Jai Hind.</p>`;
 }
 
-window.flipToRegister = function(){ document.getElementById("flipCard")?.classList.add("flip"); };
-window.flipToLogin = function(){ document.getElementById("flipCard")?.classList.remove("flip"); };
-window.openJoinPopup = function(){
+window.flipToRegister = function () {
+  document.getElementById("flipCard")?.classList.add("flip");
+};
+
+window.flipToLogin = function () {
+  document.getElementById("flipCard")?.classList.remove("flip");
+};
+
+window.openJoinPopup = function () {
   document.getElementById("joinPopup").style.display = "flex";
   document.getElementById("joinOpenBox").style.display = isRecruitmentOpen() ? "block" : "none";
   document.getElementById("joinClosedBox").style.display = isRecruitmentOpen() ? "none" : "block";
 };
-window.closeJoinPopup = function(){ document.getElementById("joinPopup").style.display = "none"; };
+
+window.closeJoinPopup = function () {
+  document.getElementById("joinPopup").style.display = "none";
+};
 
 const yearSelect = document.getElementById("registerYear");
-if(yearSelect){
+if (yearSelect) {
   const currentYear = new Date().getFullYear();
-  for(let y=currentYear; y>=2020; y--){
+  for (let y = currentYear; y >= 2020; y--) {
     const option = document.createElement("option");
-    option.value = String(y); option.textContent = String(y); yearSelect.appendChild(option);
+    option.value = String(y);
+    option.textContent = String(y);
+    yearSelect.appendChild(option);
   }
 }
-["registerYear","registerGender","registerNumber","registerRank","registerName"].forEach(id=>{
+
+["registerYear", "registerGender", "registerNumber", "registerRank", "registerName"].forEach((id) => {
   document.getElementById(id)?.addEventListener("input", updateRegimentalPreview);
   document.getElementById(id)?.addEventListener("change", updateRegimentalPreview);
 });
 updateRegimentalPreview();
 
-document.getElementById("joinForm")?.addEventListener("submit", async function(e){
+document.getElementById("joinForm")?.addEventListener("submit", async function (e) {
   e.preventDefault();
-  if(!isRecruitmentOpen()){ alert("NCC recruitment is currently closed."); return; }
-  const payload = {
-    name: document.getElementById("appName").value.trim(),
-    department: document.getElementById("appDepartment").value.trim(),
-    roll: document.getElementById("appRoll").value.trim(),
-    semester: document.getElementById("appSemester").value.trim(),
-    gender: document.getElementById("appGender").value,
-    mobile: document.getElementById("appMobile").value.trim(),
-    email: document.getElementById("appEmail").value.trim(),
-    height: document.getElementById("appHeight").value.trim(),
-    blood_group: document.getElementById("appBlood").value,
-    hostel_status: document.getElementById("appHostel").value,
-    emergency_contact: document.getElementById("appEmergency").value.trim(),
-    a_certificate: document.getElementById("appAcer").value,
-    sports_certificate: document.getElementById("appSports").value,
-    cultural_certificate: document.getElementById("appCultural").value,
-    medical_issues: document.getElementById("appMedical").value.trim(),
-    skills: document.getElementById("appSkills").value.trim(),
-    reason: document.getElementById("appReason").value.trim(),
-    status: "pending"
-  };
-  const { error } = await supabase.from("ncc_applications").insert(payload);
-  if(error){ console.error(error); alert("Application submission failed: " + error.message); return; }
-  alert("Your NCC application has been submitted successfully. Jai Hind.");
-  this.reset(); window.closeJoinPopup();
+  if (!isRecruitmentOpen()) {
+    alert("NCC recruitment is currently closed.");
+    return;
+  }
+
+  try {
+    const payload = {
+      name: document.getElementById("appName").value.trim(),
+      department: document.getElementById("appDepartment").value.trim(),
+      roll: document.getElementById("appRoll").value.trim(),
+      semester: document.getElementById("appSemester").value.trim(),
+      gender: document.getElementById("appGender").value,
+      mobile: document.getElementById("appMobile").value.trim(),
+      email: document.getElementById("appEmail").value.trim().toLowerCase(),
+      height: document.getElementById("appHeight").value.trim(),
+      bloodGroup: document.getElementById("appBlood").value,
+      hostelStatus: document.getElementById("appHostel").value,
+      emergencyContact: document.getElementById("appEmergency").value.trim(),
+      aCertificate: document.getElementById("appAcer").value,
+      sportsCertificate: document.getElementById("appSports").value,
+      culturalCertificate: document.getElementById("appCultural").value,
+      medicalIssues: document.getElementById("appMedical").value.trim(),
+      skills: document.getElementById("appSkills").value.trim(),
+      reason: document.getElementById("appReason").value.trim(),
+      status: "pending",
+      submittedAt: new Date().toISOString()
+    };
+
+    await addDoc(collection(db, "nccApplications"), payload);
+    alert("Your NCC application has been submitted successfully. Jai Hind.");
+    this.reset();
+    window.closeJoinPopup();
+  } catch (err) {
+    console.error(err);
+    alert("Application submission failed: " + (err.message || "Please try again."));
+  }
 });
 
-window.registerCadet = async function(){
+window.registerCadet = async function () {
   const year = document.getElementById("registerYear").value;
   const gender = document.getElementById("registerGender").value;
   const wing = wingFromGender(gender);
   const number = normalizePart(document.getElementById("registerNumber").value);
   const rank = normalizePart(document.getElementById("registerRank").value);
-  const fullName = document.getElementById("registerName").value.trim().replace(/\s+/g," ").toUpperCase();
+  const fullName = document.getElementById("registerName").value.trim().replace(/\s+/g, " ").toUpperCase();
   const phone = document.getElementById("registerPhone").value.trim();
   const password = document.getElementById("registerPass").value;
   const confirmPassword = document.getElementById("registerConfirmPass").value;
 
-  if(!year || !gender || !wing || !number || !rank || !fullName || !phone || !password || !confirmPassword){
-    alert("Please fill every registration field."); return;
+  if (!year || !gender || !wing || !number || !rank || !fullName || !phone || !password || !confirmPassword) {
+    alert("Please fill every registration field.");
+    return;
   }
-  if(!/^\d+$/.test(number)){ alert("Cadet Number must contain digits only."); return; }
-  if(!/^\d{10}$/.test(phone)){ alert("Enter a valid 10-digit phone number."); return; }
-  if(password.length < 6){ alert("Password must contain at least 6 characters."); return; }
-  if(password !== confirmPassword){ alert("Passwords do not match."); return; }
+  if (!/^\d+$/.test(number)) {
+    alert("Cadet Number must contain digits only.");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    alert("Enter a valid 10-digit phone number.");
+    return;
+  }
+  if (password.length < 6) {
+    alert("Password must contain at least 6 characters.");
+    return;
+  }
+  if (password !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
 
   const regimentalNumber = `ML${year}${wing}${number}${rank}${normalizePart(fullName)}`;
-  const hiddenEmail = authEmailFromRegimentalNumber(regimentalNumber);
+  const cadetDocKey = normalizePart(regimentalNumber);
+  const syntheticEmail = authEmailFromRegimentalNumber(regimentalNumber);
 
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email: hiddenEmail,
-    password,
-    options: { data: { regimental_number: regimentalNumber, full_name: fullName, phone, gender, wing } }
-  });
-  if(authError){ console.error(authError); alert("Registration failed: " + authError.message); return; }
-  if(!authData.user){ alert("Registration could not be completed."); return; }
+  try {
+    const existingSnap = await getDoc(doc(db, "cadets", cadetDocKey));
+    if (existingSnap.exists()) {
+      alert("This Regimental Number is already registered. Please login.");
+      return;
+    }
 
-  const { error: profileError } = await supabase.from("cadets").insert({
-    user_id: authData.user.id,
-    cadet_id: regimentalNumber,
-    phone,
-    joining_year: Number(year),
-    gender,
-    wing,
-    rank,
-    full_name: fullName,
-    cadet_year: 1,
-    status: "active"
-  });
-  if(profileError){
-    console.error(profileError);
-    alert("Account was created, but the cadet profile could not be saved: " + profileError.message);
+    try {
+      await createUserWithEmailAndPassword(auth, syntheticEmail, password);
+    } catch (authErr) {
+      if (authErr.code !== "auth/email-already-in-use") {
+        console.warn("Auth signup warning:", authErr);
+      }
+    }
+
+    await setDoc(doc(db, "cadets", cadetDocKey), {
+      id: regimentalNumber,
+      name: fullName,
+      phone,
+      year: Number(year),
+      gender,
+      wing,
+      rank,
+      cadetYear: 1,
+      status: "active",
+      password,
+      createdAt: new Date().toISOString()
+    });
+
+    alert(`Registration successful.\n\nYour Regimental Number is:\n${regimentalNumber}\n\nSave it for login.`);
+    document.getElementById("loginType").value = "cadet";
+    document.getElementById("loginId").value = regimentalNumber;
+    document.getElementById("loginPass").value = "";
+    window.flipToLogin();
+  } catch (err) {
+    console.error("Registration error:", err);
+    alert("Registration failed: " + (err.message || "Unable to register cadet."));
+  }
+};
+
+window.forgotPasswordFromLogin = async function () {
+  const rawId = document.getElementById("loginId").value.trim();
+  if (!rawId) {
+    alert("Enter your Regimental Number or Email first, then click Forgot Password.");
     return;
   }
 
-  alert(`Registration successful.\n\nYour Regimental Number is:\n${regimentalNumber}\n\nSave it for login.`);
-  document.getElementById("loginType").value = "cadet";
-  document.getElementById("loginId").value = regimentalNumber;
-  document.getElementById("loginPass").value = "";
-  window.flipToLogin();
+  try {
+    let targetEmail = "";
+    if (rawId.includes("@")) {
+      targetEmail = rawId.toLowerCase();
+    } else {
+      const key = normalizePart(rawId);
+      const snap = await getDoc(doc(db, "cadets", key));
+      targetEmail = snap.exists() && snap.data().email
+        ? String(snap.data().email).trim().toLowerCase()
+        : authEmailFromRegimentalNumber(key);
+    }
+
+    await sendPasswordResetEmail(auth, targetEmail);
+    alert("Password reset email sent to " + targetEmail);
+  } catch (err) {
+    console.error("Reset error:", err);
+    alert("Could not send password reset: " + (err.message || "Check account details."));
+  }
 };
 
-window.login = async function(){
+window.login = async function () {
   const type = document.getElementById("loginType").value;
-  const id = normalizePart(document.getElementById("loginId").value);
+  const rawInput = document.getElementById("loginId").value.trim();
+  const id = normalizePart(rawInput);
   const password = document.getElementById("loginPass").value;
-  if(!id || !password){ alert("Please enter your ID and password."); return; }
 
-  if(type === "ano"){
-    if(id === "ANO001" && password === "USTMNCC@Admin2026"){
-      localStorage.setItem("activeAnoId","ANO001");
-      window.location.href = "ano-dashboard.html";
-    }else alert("Invalid ANO ID or password.");
+  if (!id || !password) {
+    alert("Please enter your ID and password.");
     return;
   }
 
-  if(!id.startsWith("ML")){ alert("Enter a valid Regimental Number beginning with ML."); return; }
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: authEmailFromRegimentalNumber(id), password
-  });
-  if(error){ console.error(error); alert("Invalid Regimental Number or password."); return; }
-
-  const { data: cadet, error: cadetError } = await supabase
-    .from("cadets").select("cadet_id,status").eq("user_id", data.user.id).single();
-  if(cadetError || !cadet){ console.error(cadetError); alert("Cadet profile was not found."); return; }
-  if(cadet.status === "cancelled" || cadet.status === "inactive"){
-    await supabase.auth.signOut(); alert("This cadet account is not active."); return;
+  if (type === "ano") {
+    if ((id === "ANO001" || id === "USTMANO001") && password === "USTMNCC@Admin2026") {
+      localStorage.setItem("activeAnoId", "ANO001");
+      window.location.href = "ano-dashboard.html";
+    } else {
+      alert("Invalid ANO ID or password.");
+    }
+    return;
   }
-  localStorage.setItem("activeCadetId", cadet.cadet_id);
-  localStorage.setItem("activeCadetUserId", data.user.id);
-  window.location.href = "cadet-dashboard.html";
+
+  try {
+    const cadetSnap = await getDoc(doc(db, "cadets", id));
+    let cadetData = cadetSnap.exists() ? cadetSnap.data() : null;
+    let cadetKey = id;
+
+    if (!cadetData && rawInput.includes("@")) {
+      const q = query(collection(db, "cadets"), where("email", "==", rawInput.toLowerCase()));
+      const qs = await getDocs(q);
+      if (!qs.empty) {
+        cadetKey = qs.docs[0].id;
+        cadetData = qs.docs[0].data();
+      }
+    }
+
+    if (!cadetData) {
+      alert("Cadet record not found. Please register first.");
+      return;
+    }
+
+    if (String(cadetData.status || "").toLowerCase() === "cancelled") {
+      alert("This cadet account is not active.");
+      return;
+    }
+
+    let validPass = cadetData.password && cadetData.password === password;
+    if (!validPass) {
+      const loginEmail = cadetData.email || authEmailFromRegimentalNumber(cadetData.id || cadetKey);
+      await signInWithEmailAndPassword(auth, loginEmail, password);
+      validPass = true;
+    }
+
+    if (!validPass) {
+      alert("Invalid Regimental Number or password.");
+      return;
+    }
+
+    localStorage.setItem("activeCadetId", cadetData.id || cadetKey);
+    localStorage.setItem("activeCadetKey", normalizePart(cadetKey));
+    window.location.href = "cadet-dashboard.html";
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("Invalid Regimental Number or password.");
+  }
 };
 
-async function loadLatestNotice(){
-  const { data, error } = await supabase.from("notices").select("*").order("created_at",{ascending:false}).limit(10);
-  if(error || !data?.length){ if(error) console.error(error); return; }
-  const latest = data.find(n => !n.expires_at || new Date(n.expires_at) > new Date());
-  if(!latest) return;
-  document.getElementById("noticeTitle").innerText = latest.title || "Notice";
-  document.getElementById("noticeContent").innerText = latest.content || "";
-  document.getElementById("noticeBy").innerText = "Published by: " + (latest.published_by || "ANO") + " | " + new Date(latest.created_at).toLocaleDateString();
-  const mediaBox = document.getElementById("noticeMediaBox");
-  if(!mediaBox) return;
-  mediaBox.innerHTML = "";
-  if(latest.media_url){
-    mediaBox.innerHTML = latest.media_type === "video" ?
-      `<video controls style="width:100%;max-height:420px;border-radius:14px;margin-top:15px"><source src="${latest.media_url}"></video>` :
-      `<img src="${latest.media_url}" alt="Notice Photo" style="width:100%;max-height:500px;object-fit:contain;border-radius:14px;margin-top:15px">`;
+async function loadLatestNotice() {
+  try {
+    const snap = await getDocs(collection(db, "notices"));
+    if (snap.empty) return;
+
+    const now = new Date();
+    const notices = [];
+    snap.forEach((d) => notices.push({ id: d.id, ...d.data() }));
+    notices.sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+
+    const latest = notices.find((n) => !n.expiresAt || new Date(n.expiresAt) > now);
+    if (!latest) return;
+
+    document.getElementById("noticeTitle").innerText = latest.title || "Notice";
+    document.getElementById("noticeContent").innerText = latest.content || "";
+    document.getElementById("noticeBy").innerText =
+      "Published by: " + (latest.by || "ANO") + (latest.date ? " | " + latest.date : "");
+
+    const mediaBox = document.getElementById("noticeMediaBox");
+    if (!mediaBox) return;
+    mediaBox.innerHTML = "";
+    if (latest.mediaUrl) {
+      mediaBox.innerHTML =
+        latest.mediaType === "video"
+          ? `<video controls style="width:100%;max-height:420px;border-radius:14px;margin-top:15px"><source src="${latest.mediaUrl}"></video>`
+          : `<img src="${latest.mediaUrl}" alt="Notice Photo" style="width:100%;max-height:500px;object-fit:contain;border-radius:14px;margin-top:15px">`;
+    }
+  } catch (err) {
+    console.error("Notice load error:", err);
   }
 }
 
 setRecruitmentUI();
 loadLatestNotice();
 </script>
-
 
 <script>
 function openAnoPopup(){
