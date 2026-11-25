@@ -3,119 +3,504 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>USTM NCC Portal — Login & Register</title>
-<link rel="stylesheet" href="login.css?v=201">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?v=20">
+<title>USTM NCC Portal | Login &amp; Registration</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --navy:#061a40;
+  --navy-2:#08275d;
+  --saffron:#ff9933;
+  --green:#138808;
+  --light:#f4f7fc;
+  --danger:#c62828;
+  --border:#cfd6e2;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:linear-gradient(135deg,#041433,var(--navy-2));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  color:var(--navy);
+}
+
+.back-link{
+  align-self:flex-start;
+  max-width:460px;
+  width:100%;
+  margin:0 auto 14px;
+  color:#fff;
+  text-decoration:none;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.back-link:hover{
+  color:var(--saffron);
+}
+
+.auth-card{
+  width:100%;
+  max-width:460px;
+  background:#fff;
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 18px 40px rgba(0,0,0,.32);
+  border-top:5px solid var(--saffron);
+  position:relative;
+  overflow:hidden;
+}
+
+.auth-card::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:5px;
+  background:linear-gradient(90deg,var(--saffron),#fff,var(--green));
+}
+
+.brand{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.brand img{
+  width:68px;
+  height:68px;
+  object-fit:contain;
+  border-radius:50%;
+  margin-bottom:8px;
+}
+
+.brand h1{
+  font-size:24px;
+  color:var(--navy);
+}
+
+.brand p{
+  font-size:13px;
+  color:#4c5c77;
+  margin-top:4px;
+}
+
+.mode-tabs,
+.role-tabs{
+  display:grid;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.mode-tabs{
+  grid-template-columns:1fr 1fr;
+}
+
+.role-tabs{
+  grid-template-columns:1fr 1fr;
+  background:#eef2f8;
+  padding:5px;
+  border-radius:12px;
+}
+
+.mode-tabs button{
+  padding:11px;
+  border:1px solid var(--border);
+  background:#f8fafc;
+  color:var(--navy);
+  font-weight:800;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.mode-tabs button.active{
+  background:var(--navy);
+  color:#fff;
+  border-color:var(--navy);
+}
+
+.role-tabs button{
+  padding:9px;
+  border:none;
+  background:transparent;
+  color:var(--navy);
+  font-weight:800;
+  border-radius:9px;
+  cursor:pointer;
+}
+
+.role-tabs button.active{
+  background:#fff;
+  color:var(--navy);
+  box-shadow:0 3px 10px rgba(6,26,64,.12);
+}
+
+.field{
+  margin-bottom:13px;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:5px;
+  color:var(--navy);
+}
+
+.input-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+
+.input-wrap i{
+  position:absolute;
+  left:13px;
+  color:#5b6c88;
+}
+
+.input-wrap input,
+.input-wrap select{
+  width:100%;
+  padding:11px 12px 11px 38px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:14px;
+  outline:none;
+}
+
+.input-wrap input:focus,
+.input-wrap select:focus{
+  border-color:var(--navy);
+}
+
+.captcha-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.captcha-box{
+  flex:1;
+  background:#eef2f8;
+  border:1px dashed var(--navy);
+  border-radius:10px;
+  padding:10px 14px;
+  font-weight:900;
+  letter-spacing:3px;
+  text-align:center;
+  font-size:17px;
+  user-select:none;
+}
+
+.refresh-btn{
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--navy);
+  border-radius:10px;
+  padding:10px 13px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.login-meta-row{
+  display:flex;
+  justify-content:flex-end;
+  margin:-4px 0 14px;
+}
+
+.link-btn{
+  background:none;
+  border:none;
+  color:#0b54a0;
+  font-weight:700;
+  font-size:13px;
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+.link-btn:hover{
+  color:var(--navy);
+}
+
+.submit-btn{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:11px;
+  background:var(--green);
+  color:#fff;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.submit-btn:hover{
+  background:var(--saffron);
+  color:var(--navy);
+}
+
+.submit-btn:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+.secondary-btn{
+  width:100%;
+  margin-top:10px;
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:#f8fafc;
+  color:var(--navy);
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.panel{
+  display:none;
+}
+
+.panel.active{
+  display:block;
+}
+
+.panel-note{
+  font-size:13px;
+  color:#4c5c77;
+  margin-bottom:14px;
+  line-height:1.45;
+}
+
+#statusMsg{
+  margin-top:14px;
+  font-size:13px;
+  font-weight:700;
+  text-align:center;
+  min-height:18px;
+}
+
+.msg-error{
+  color:var(--danger);
+}
+
+.msg-success{
+  color:var(--green);
+}
+</style>
 </head>
 <body>
-<a href="index.html" class="back-btn">
-    <i class="fa-solid fa-arrow-left"></i> Back to Portal
+
+<a href="index.html" class="back-link">
+  <i class="fa-solid fa-arrow-left"></i> Back to Home
 </a>
 
-<div class="login-card">
-    <div class="logo">
-        <img src="ustmncclogo.jpeg" alt="USTM NCC Logo" class="portal-logo" onerror="this.style.display='none'">
-        <h1>USTM NCC</h1>
-        <p>Cadet &amp; ANO Portal</p>
+<div class="auth-card">
+  <div class="brand">
+    <img src="ustmncclogo.jpeg" alt="USTM NCC Logo" onerror="this.style.display='none'">
+    <h1>USTM NCC Portal</h1>
+    <p>42 MEGH BN NCC | Cadet &amp; ANO Access</p>
+  </div>
+
+  <!-- Top Tabs: Login vs Register -->
+  <div class="mode-tabs">
+    <button type="button" id="tabLogin" class="active" onclick="switchMode('login')">Login</button>
+    <button type="button" id="tabRegister" onclick="switchMode('register')">Register</button>
+  </div>
+
+  <!-- LOGIN PANEL (Forgot Password lives ONLY inside Login) -->
+  <form id="loginPanel" class="panel active" onsubmit="handleLogin(event)">
+    <div class="role-tabs">
+      <button type="button" id="roleCadet" class="active" onclick="selectLoginRole('cadet')">Cadet Login</button>
+      <button type="button" id="roleAno" onclick="selectLoginRole('ano')">ANO Login</button>
     </div>
 
-    <div class="top-tabs">
-        <button type="button" id="loginTab" class="active" onclick="showLogin()">Login</button>
-        <button type="button" id="registerTab" onclick="showRegister()">Register</button>
+    <div class="field">
+      <label id="loginIdLabel" for="loginIdentifier">Cadet ID or Registered Email</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-id-card"></i>
+        <input type="text" id="loginIdentifier" placeholder="Enter Cadet ID or Email" autocomplete="username" required>
+      </div>
     </div>
 
-    <!-- LOGIN SECTION (includes Forgot Password ONLY here) -->
-    <div id="loginForm">
-        <div class="role-tabs">
-            <button type="button" id="cadetBtn" class="active" onclick="setRole('cadet')">Cadet Login</button>
-            <button type="button" id="anoBtn" onclick="setRole('ano')">ANO Login</button>
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-id-card"></i>
-            <input type="text" id="userId" placeholder="Enter Cadet ID or Email">
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" id="loginPassword" placeholder="Enter Password">
-        </div>
-
-        <div class="captcha-box">
-            <span id="captchaText"></span>
-            <button type="button" onclick="generateCaptcha()" title="Refresh Captcha">↻</button>
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-shield-halved"></i>
-            <input type="text" id="captchaInput" placeholder="Enter Captcha">
-        </div>
-
-        <div class="login-actions-row">
-            <button type="button" class="link-btn" onclick="openForgotPassword()">Forgot Password?</button>
-        </div>
-
-        <button type="button" class="main-btn" onclick="loginUser()">Login</button>
+    <div class="field">
+      <label for="loginPassword">Password</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="loginPassword" placeholder="Enter Password" autocomplete="current-password" required>
+      </div>
     </div>
 
-    <!-- FORGOT PASSWORD PANEL (opened from Login only) -->
-    <div id="forgotPasswordForm" style="display: none;">
-        <h3>Reset Password</h3>
-        <p class="helper-text">Enter your registered email or Cadet/ANO ID to receive a reset link.</p>
-
-        <div class="input-box">
-            <i class="fa-solid fa-envelope"></i>
-            <input type="text" id="resetIdentifier" placeholder="Registered Email or ID (e.g. USTMANO001)">
-        </div>
-
-        <button type="button" class="main-btn" onclick="sendPasswordReset()">Send Reset Link</button>
-        <button type="button" class="link-btn back-to-login-btn" onclick="backToLogin()">Back to Login</button>
+    <div class="captcha-row">
+      <div class="captcha-box" id="captchaCode">------</div>
+      <button type="button" class="refresh-btn" onclick="refreshCaptcha()" title="New Captcha">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
     </div>
 
-    <!-- REGISTER SECTION (no Forgot Password here) -->
-    <div id="registerForm" style="display: none;">
-        <div class="input-box">
-            <i class="fa-solid fa-user"></i>
-            <input type="text" id="regName" placeholder="Full Name">
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-id-card"></i>
-            <input type="text" id="regCadetId" placeholder="Cadet ID (e.g. AS20.../NCC/.../Cadet/Name)">
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-envelope"></i>
-            <input type="email" id="regEmail" placeholder="Email Address">
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" id="regPassword" placeholder="Create Password (8+ chars)">
-        </div>
-
-        <button type="button" class="main-btn" onclick="registerUser()">Register</button>
+    <div class="field">
+      <label for="captchaInput">Verify Captcha</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-shield-halved"></i>
+        <input type="text" id="captchaInput" placeholder="Type code shown above" required>
+      </div>
     </div>
 
-    <p id="message" role="alert"></p>
+    <!-- Forgot Password strictly in Login section -->
+    <div class="login-meta-row">
+      <button type="button" class="link-btn" onclick="openForgotPassword()">Forgot Password?</button>
+    </div>
+
+    <button type="submit" class="submit-btn" id="loginSubmitBtn">
+      <i class="fa-solid fa-right-to-bracket"></i> Login
+    </button>
+  </form>
+
+  <!-- FORGOT PASSWORD PANEL (Accessed from Login only) -->
+  <form id="forgotPanel" class="panel" onsubmit="handleForgotPassword(event)">
+    <p class="panel-note">
+      Enter the email address linked to your account to receive a password reset link.
+    </p>
+
+    <div class="field">
+      <label for="resetEmail">Registered Email Address</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="resetEmail" placeholder="name@example.com" required>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="resetSubmitBtn">
+      <i class="fa-solid fa-paper-plane"></i> Send Reset Link
+    </button>
+
+    <button type="button" class="secondary-btn" onclick="backToLoginFromReset()">
+      <i class="fa-solid fa-arrow-left"></i> Back to Login
+    </button>
+  </form>
+
+  <!-- REGISTER PANEL (Cadet registration only; NO Forgot Password here) -->
+  <form id="registerPanel" class="panel" onsubmit="handleCadetRegister(event)">
+    <div class="field">
+      <label for="regName">Full Name</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="regName" placeholder="Cadet Full Name" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="regCadetId">Cadet ID</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-id-badge"></i>
+        <input type="text" id="regCadetId" placeholder="e.g. ML2024SDIA4980182CDTNAME" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="regRank">Rank</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-chevron-up"></i>
+        <select id="regRank">
+          <option value="CDT">CDT</option>
+          <option value="LCPL">LCPL</option>
+          <option value="CPL">CPL</option>
+          <option value="SGT">SGT</option>
+          <option value="JUO">JUO</option>
+          <option value="SUO">SUO</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="regPhone">Mobile Number</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-phone"></i>
+        <input type="tel" id="regPhone" placeholder="10-digit mobile number" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="regEmail">Email Address</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="regEmail" placeholder="cadet@example.com" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="regPassword">Create Password</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="regPassword" placeholder="Minimum 6 characters" minlength="6" required>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="registerSubmitBtn">
+      <i class="fa-solid fa-user-plus"></i> Register Cadet
+    </button>
+  </form>
+
+  <div id="statusMsg" role="status" aria-live="polite"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script>
-let currentRole = "cadet";
-let currentCaptcha = "";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const sbClient =
-  window.supabaseClient ||
-  (window.supabase && window.SUPABASE_URL && window.SUPABASE_ANON_KEY
-    ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
-    : null);
+const firebaseConfig = {
+  apiKey: "AIzaSyDQZMu4v6XebenpS2cG2NwYN3RYKS6NWUs",
+  authDomain: "ustm-ncc-portal.firebaseapp.com",
+  projectId: "ustm-ncc-portal",
+  storageBucket: "ustm-ncc-portal.appspot.com",
+  messagingSenderId: "164517585348",
+  appId: "1:164517585348:web:119a2abdb1d871226ec491"
+};
 
-function setMessage(text, isError = true) {
-  const el = document.getElementById("message");
-  el.innerText = text;
-  el.style.color = isError ? "#d93025" : "#188038";
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let loginRole = "cadet";
+let captchaValue = "";
+
+function setStatus(msg, type = "error") {
+  const el = document.getElementById("statusMsg");
+  el.textContent = msg || "";
+  el.className = msg ? (type === "success" ? "msg-success" : "msg-error") : "";
+}
+
+function cleanKey(val) {
+  return String(val || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 }
 
 function generateCaptcha() {
@@ -124,193 +509,293 @@ function generateCaptcha() {
   for (let i = 0; i < 6; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  currentCaptcha = code;
-  const el = document.getElementById("captchaText");
-  if (el) el.innerText = code;
+  captchaValue = code;
+  const box = document.getElementById("captchaCode");
+  if (box) box.textContent = code;
 }
 
-function setRole(role) {
-  currentRole = role;
-  const cadetBtn = document.getElementById("cadetBtn");
-  const anoBtn = document.getElementById("anoBtn");
-  const idInput = document.getElementById("userId");
+window.refreshCaptcha = function () {
+  generateCaptcha();
+  document.getElementById("captchaInput").value = "";
+};
 
-  cadetBtn.classList.toggle("active", role === "cadet");
-  anoBtn.classList.toggle("active", role === "ano");
+window.switchMode = function (mode) {
+  const isLogin = mode === "login";
+  document.getElementById("tabLogin").classList.toggle("active", isLogin);
+  document.getElementById("tabRegister").classList.toggle("active", !isLogin);
+
+  document.getElementById("loginPanel").classList.toggle("active", isLogin);
+  document.getElementById("forgotPanel").classList.remove("active");
+  document.getElementById("registerPanel").classList.toggle("active", !isLogin);
+
+  if (isLogin) {
+    generateCaptcha();
+  }
+  setStatus("");
+};
+
+window.selectLoginRole = function (role) {
+  loginRole = role;
+  document.getElementById("roleCadet").classList.toggle("active", role === "cadet");
+  document.getElementById("roleAno").classList.toggle("active", role === "ano");
+
+  const label = document.getElementById("loginIdLabel");
+  const input = document.getElementById("loginIdentifier");
 
   if (role === "ano") {
-    idInput.placeholder = "Enter ANO ID (e.g. USTMANO001) or Email";
+    label.textContent = "ANO ID or Registered Email";
+    input.placeholder = "Enter ANO001 / USTMANO001 or Email";
   } else {
-    idInput.placeholder = "Enter Cadet ID or Email";
+    label.textContent = "Cadet ID or Registered Email";
+    input.placeholder = "Enter Cadet ID or Email";
   }
-  setMessage("");
-}
+  setStatus("");
+};
 
-function showLogin() {
-  document.getElementById("loginTab").classList.add("active");
-  document.getElementById("registerTab").classList.remove("active");
-  document.getElementById("loginForm").style.display = "block";
-  document.getElementById("forgotPasswordForm").style.display = "none";
-  document.getElementById("registerForm").style.display = "none";
-  generateCaptcha();
-  setMessage("");
-}
-
-function showRegister() {
-  document.getElementById("registerTab").classList.add("active");
-  document.getElementById("loginTab").classList.remove("active");
-  document.getElementById("registerForm").style.display = "block";
-  document.getElementById("loginForm").style.display = "none";
-  document.getElementById("forgotPasswordForm").style.display = "none";
-  setMessage("");
-}
-
-function openForgotPassword() {
-  document.getElementById("loginForm").style.display = "none";
-  document.getElementById("registerForm").style.display = "none";
-  document.getElementById("forgotPasswordForm").style.display = "block";
-  const currentId = document.getElementById("userId").value.trim();
-  if (currentId) {
-    document.getElementById("resetIdentifier").value = currentId;
-  }
-  setMessage("");
-}
-
-function backToLogin() {
-  showLogin();
-}
-
-function resolveLoginEmail(rawId, role) {
-  const cleaned = rawId.trim();
-  if (cleaned.includes("@")) return cleaned.toLowerCase();
-  const normalized = cleaned.toUpperCase().replace(/\s+/g, "");
-  return role === "ano"
-    ? `${normalized.toLowerCase()}@ano.ustmncc.local`
-    : `${normalized.toLowerCase()}@cadet.ustmncc.local`;
-}
-
-async function loginUser() {
-  const rawId = document.getElementById("userId").value.trim();
-  const password = document.getElementById("loginPassword").value;
-  const captchaVal = document.getElementById("captchaInput").value.trim().toUpperCase();
-
-  if (!rawId) {
-    return setMessage(currentRole === "ano" ? "Please enter your ANO ID or email." : "Please enter your Cadet ID or email.");
-  }
-  if (!password) {
-    return setMessage("Please enter your password.");
-  }
-  if (!captchaVal || captchaVal !== currentCaptcha) {
-    generateCaptcha();
-    return setMessage("Invalid captcha. Please try again.");
-  }
-
-  const email = resolveLoginEmail(rawId, currentRole);
-
-  if (sbClient) {
-    const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-    if (error) {
-      generateCaptcha();
-      return setMessage(error.message || "Login failed. Check your ID and password.");
-    }
-
-    const userRole = data?.user?.user_metadata?.role || data?.user?.app_metadata?.role || currentRole;
-    if (currentRole === "ano" && userRole !== "ano" && userRole !== "admin") {
-      await sbClient.auth.signOut();
-      generateCaptcha();
-      return setMessage("This account is not authorized for ANO Login.");
-    }
-
-    if (currentRole === "ano") {
-      localStorage.setItem("activeAnoId", rawId.toUpperCase());
-      window.location.href = "ano-dashboard.html";
-    } else {
-      localStorage.setItem("activeCadetId", rawId);
-      window.location.href = "cadet-dashboard.html";
-    }
+window.openForgotPassword = function () {
+  if (document.getElementById("registerPanel").classList.contains("active")) {
     return;
   }
+  document.getElementById("loginPanel").classList.remove("active");
+  document.getElementById("registerPanel").classList.remove("active");
+  document.getElementById("forgotPanel").classList.add("active");
 
-  // Fallback local check when Supabase client isn't configured in browser
-  if (currentRole === "ano") {
-    const savedAno = JSON.parse(localStorage.getItem("anoAccount_" + rawId.toUpperCase()) || "null");
-    if (!savedAno || savedAno.password !== password) {
-      generateCaptcha();
-      return setMessage("Invalid ANO credentials.");
-    }
-    localStorage.setItem("activeAnoId", rawId.toUpperCase());
-    window.location.href = "ano-dashboard.html";
-  } else {
-    const savedCadet = JSON.parse(localStorage.getItem("cadetAccount_" + rawId) || "null");
-    if (!savedCadet || savedCadet.password !== password) {
-      generateCaptcha();
-      return setMessage("Invalid Cadet credentials.");
-    }
-    localStorage.setItem("activeCadetId", rawId);
-    window.location.href = "cadet-dashboard.html";
+  const currentVal = document.getElementById("loginIdentifier").value.trim();
+  if (currentVal.includes("@")) {
+    document.getElementById("resetEmail").value = currentVal;
   }
+  setStatus("");
+};
+
+window.backToLoginFromReset = function () {
+  document.getElementById("forgotPanel").classList.remove("active");
+  document.getElementById("registerPanel").classList.remove("active");
+  document.getElementById("loginPanel").classList.add("active");
+  generateCaptcha();
+  setStatus("");
+};
+
+async function findCadetRecord(identifier) {
+  const trimmed = identifier.trim();
+  const normalizedKey = cleanKey(trimmed);
+
+  // 1. Direct doc lookup by cleaned ID
+  if (normalizedKey) {
+    const directSnap = await getDoc(doc(db, "cadets", normalizedKey));
+    if (directSnap.exists()) {
+      return { docId: directSnap.id, data: directSnap.data() };
+    }
+  }
+
+  // 2. Query by email or id field
+  const cadetsRef = collection(db, "cadets");
+  const qByEmail = query(cadetsRef, where("email", "==", trimmed.toLowerCase()));
+  const emailSnap = await getDocs(qByEmail);
+  if (!emailSnap.empty) {
+    const first = emailSnap.docs[0];
+    return { docId: first.id, data: first.data() };
+  }
+
+  const qById = query(cadetsRef, where("id", "==", trimmed));
+  const idSnap = await getDocs(qById);
+  if (!idSnap.empty) {
+    const first = idSnap.docs[0];
+    return { docId: first.id, data: first.data() };
+  }
+
+  return null;
 }
 
-async function sendPasswordReset() {
-  const identifier = document.getElementById("resetIdentifier").value.trim();
-  if (!identifier) {
-    return setMessage("Please enter your email or ID to reset your password.");
+window.handleLogin = async function (event) {
+  event.preventDefault();
+  setStatus("");
+
+  const identifier = document.getElementById("loginIdentifier").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const captchaEntered = document.getElementById("captchaInput").value.trim().toUpperCase();
+  const btn = document.getElementById("loginSubmitBtn");
+
+  if (!identifier || !password) {
+    return setStatus("Please enter your ID/email and password.");
   }
 
-  const email = identifier.includes("@")
-    ? identifier.toLowerCase()
-    : resolveLoginEmail(identifier, currentRole);
-
-  if (!sbClient) {
-    return setMessage("Password reset email service requires Supabase configuration.");
+  if (captchaEntered !== captchaValue) {
+    generateCaptcha();
+    document.getElementById("captchaInput").value = "";
+    return setStatus("Incorrect captcha. Please try again.");
   }
 
-  const redirectTo = `${window.location.origin}${window.location.pathname}`;
-  const { error } = await sbClient.auth.resetPasswordForEmail(email, { redirectTo });
+  btn.disabled = true;
 
-  if (error) {
-    return setMessage(error.message || "Could not send password reset email.");
+  try {
+    if (loginRole === "ano") {
+      const normalizedAno = cleanKey(identifier);
+      const isAnoId = normalizedAno === "ANO001" || normalizedAno === "USTMANO001";
+
+      // Check Firestore anoAdmins collection if present
+      let anoMatched = false;
+      try {
+        const anoSnap = await getDoc(doc(db, "anoAdmins", normalizedAno || "ANO001"));
+        if (anoSnap.exists()) {
+          const anoData = anoSnap.data();
+          if (anoData.email) {
+            await signInWithEmailAndPassword(auth, anoData.email, password);
+            anoMatched = true;
+          } else if (anoData.password && anoData.password === password) {
+            anoMatched = true;
+          }
+        }
+      } catch (_) {
+        // Fallback if anoAdmins collection does not exist yet
+      }
+
+      if (!anoMatched && identifier.includes("@")) {
+        await signInWithEmailAndPassword(auth, identifier, password);
+        anoMatched = true;
+      }
+
+      if (!anoMatched && isAnoId && password === "USTMNCC@Admin") {
+        anoMatched = true;
+      }
+
+      if (!anoMatched) {
+        generateCaptcha();
+        return setStatus("Invalid ANO ID/email or password.");
+      }
+
+      // ano-dashboard.html checks activeAnoId === "ANO001"
+      localStorage.setItem("activeAnoId", "ANO001");
+      window.location.replace("ano-dashboard.html");
+      return;
+    }
+
+    // Cadet Login flow
+    const foundCadet = await findCadetRecord(identifier);
+    if (!foundCadet) {
+      generateCaptcha();
+      return setStatus("Cadet account not found. Please register first.");
+    }
+
+    const cadet = foundCadet.data;
+    if (String(cadet.status || "").toLowerCase() === "cancelled") {
+      generateCaptcha();
+      return setStatus("Your NCC enrollment has been cancelled.");
+    }
+
+    let authenticated = false;
+    if (cadet.email) {
+      try {
+        await signInWithEmailAndPassword(auth, cadet.email, password);
+        authenticated = true;
+      } catch (authErr) {
+        if (!cadet.password || cadet.password !== password) {
+          generateCaptcha();
+          return setStatus("Invalid email or password.");
+        }
+        authenticated = true;
+      }
+    } else if (cadet.password && cadet.password === password) {
+      authenticated = true;
+    }
+
+    if (!authenticated) {
+      generateCaptcha();
+      return setStatus("Invalid credentials.");
+    }
+
+    const activeId = cadet.id || foundCadet.docId;
+    const activeKey = cleanKey(activeId) || foundCadet.docId;
+
+    localStorage.setItem("activeCadetId", activeId);
+    localStorage.setItem("activeCadetKey", activeKey);
+    window.location.replace("cadet-dashboard.html");
+  } catch (err) {
+    console.error("Login error:", err);
+    generateCaptcha();
+    setStatus(err.message || "Unable to log in right now.");
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+window.handleForgotPassword = async function (event) {
+  event.preventDefault();
+  setStatus("");
+
+  const email = document.getElementById("resetEmail").value.trim().toLowerCase();
+  const btn = document.getElementById("resetSubmitBtn");
+
+  if (!email) {
+    return setStatus("Please enter your registered email address.");
   }
 
-  setMessage("If an account exists for that email, a password reset link has been sent.", false);
-}
+  btn.disabled = true;
+  try {
+    await sendPasswordResetEmail(auth, email);
+    setStatus("Password reset link sent to your email.", "success");
+  } catch (err) {
+    console.error("Password reset error:", err);
+    setStatus(err.message || "Could not send reset email.");
+  } finally {
+    btn.disabled = false;
+  }
+};
 
-async function registerUser() {
+window.handleCadetRegister = async function (event) {
+  event.preventDefault();
+  setStatus("");
+
   const name = document.getElementById("regName").value.trim();
-  const cadetId = document.getElementById("regCadetId").value.trim();
+  const rawCadetId = document.getElementById("regCadetId").value.trim();
+  const rank = document.getElementById("regRank").value;
+  const phone = document.getElementById("regPhone").value.trim();
   const email = document.getElementById("regEmail").value.trim().toLowerCase();
   const password = document.getElementById("regPassword").value;
+  const btn = document.getElementById("registerSubmitBtn");
 
-  if (!name || !cadetId || !email || !password) {
-    return setMessage("Please fill in all registration fields.");
-  }
-  if (password.length < 8) {
-    return setMessage("Password must be at least 8 characters.");
+  const cadetDocKey = cleanKey(rawCadetId);
+  if (!name || !cadetDocKey || !phone || !email || password.length < 6) {
+    return setStatus("Please complete all fields (password must be at least 6 characters).");
   }
 
-  if (sbClient) {
-    const { error } = await sbClient.auth.signUp({
+  btn.disabled = true;
+  try {
+    const existingSnap = await getDoc(doc(db, "cadets", cadetDocKey));
+    if (existingSnap.exists()) {
+      return setStatus("A cadet with this Cadet ID is already registered.");
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (authErr) {
+      if (authErr.code !== "auth/email-already-in-use") {
+        throw authErr;
+      }
+    }
+
+    await setDoc(doc(db, "cadets", cadetDocKey), {
+      id: rawCadetId,
+      name,
+      rank,
+      phone,
       email,
       password,
-      options: {
-        data: { full_name: name, cadet_id: cadetId, role: "cadet" },
-      },
+      cadetYear: 1,
+      status: "active",
+      createdAt: new Date().toISOString()
     });
-    if (error) {
-      return setMessage(error.message || "Registration failed.");
-    }
-    setMessage("Registration successful! Please verify your email if required, then log in.", false);
-    return;
+
+    document.getElementById("registerPanel").reset();
+    setStatus("Cadet registered successfully! You can now log in.", "success");
+  } catch (err) {
+    console.error("Register error:", err);
+    setStatus(err.message || "Cadet registration failed.");
+  } finally {
+    btn.disabled = false;
   }
+};
 
-  localStorage.setItem("cadetAccount_" + cadetId, JSON.stringify({ name, cadetId, email, password }));
-  setMessage("Cadet registered locally. You can now switch to Login.", false);
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  generateCaptcha();
-  setRole("cadet");
-});
+generateCaptcha();
 </script>
 </body>
 </html>
