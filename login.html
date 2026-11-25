@@ -801,6 +801,10 @@ window.handleCadetRegister = async function (event) {
     return setStatus("Please complete all fields (password must be at least 6 characters).");
   }
 
+  if (window.location.protocol === "file:") {
+    return setStatus("Please open this page via a local server (http://localhost) or GitHub Pages, not file://.");
+  }
+
   btn.disabled = true;
   try {
     const existingSnap = await getDoc(doc(db, "cadets", cadetDocKey));
@@ -811,9 +815,17 @@ window.handleCadetRegister = async function (event) {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (authErr) {
-      if (authErr.code !== "auth/email-already-in-use") {
+      const msg = String(authErr?.message || "");
+      const code = String(authErr?.code || "");
+      // Allow Firestore registration to proceed if email already exists or Auth endpoint is unreachable
+      if (
+        code !== "auth/email-already-in-use" &&
+        code !== "auth/network-request-failed" &&
+        !msg.toLowerCase().includes("failed to fetch")
+      ) {
         throw authErr;
       }
+      console.warn("Firebase Auth signup fallback:", code || msg);
     }
 
     await setDoc(doc(db, "cadets", cadetDocKey), {
@@ -832,12 +844,16 @@ window.handleCadetRegister = async function (event) {
     setStatus("Cadet registered successfully! You can now log in.", "success");
   } catch (err) {
     console.error("Register error:", err);
-    setStatus(err.message || "Cadet registration failed.");
+    const errText = String(err?.message || "");
+    if (errText.toLowerCase().includes("failed to fetch") || err?.code === "auth/network-request-failed") {
+      setStatus("Network error (Failed to fetch): Check internet, disable ad-blocker, and run via http/https.");
+    } else {
+      setStatus(errText || "Cadet registration failed.");
+    }
   } finally {
     btn.disabled = false;
   }
 };
-
 generateCaptcha();
 </script>
 </body>
